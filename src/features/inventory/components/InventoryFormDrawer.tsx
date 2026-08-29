@@ -8,7 +8,8 @@
 // display derived from quantity, never a real stored field. Category is a
 // free-text Autocomplete (not a closed select) so admins can add a new
 // category without a code change. Unit and Low Stock Alert are additions
-// not present in the Figma — see the plan's Decisions 6/8 for why.
+// not present in the Figma — both map directly to Product model fields
+// (unit, lowStockThreshold) the backend needs regardless of the design.
 
 import React, { useEffect } from 'react';
 import {

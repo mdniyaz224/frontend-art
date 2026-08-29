@@ -10,7 +10,8 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore date objects in actions if needed
+        // Empty on purpose — no slice currently stores non-serializable
+        // values; add an entry here rather than disabling the check globally.
         ignoredActions: [],
         ignoredPaths: [],
       },

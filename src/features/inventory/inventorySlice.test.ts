@@ -22,6 +22,7 @@ const initialState: InventoryState = {
   detailLoading: false,
   submitting: false,
   adjusting: false,
+  adjustmentsLoading: false,
   error: null,
   pagination: DEFAULT_PAGINATION,
 };
@@ -65,7 +66,7 @@ describe('inventorySlice reducers', () => {
             quantityBefore: 5,
             quantityAfter: 10,
             reason: 'test',
-            adjustedBy: 'u1',
+            adjustedBy: { id: 'u1', name: 'Test User', email: 'test@example.com' },
             createdAt: '2024-01-01T00:00:00.000Z',
             updatedAt: '2024-01-01T00:00:00.000Z',
           },

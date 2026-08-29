@@ -88,7 +88,9 @@ export interface StockAdjustment {
   quantityBefore: number;
   quantityAfter: number;
   reason: string;
-  adjustedBy: string;
+  /** Populated by GET /:id/adjustments (stockAdjustment.service.ts) so the
+   * audit trail can show a name instead of a bare ObjectId. */
+  adjustedBy: { id: string; name: string; email: string };
   createdAt: string;
   updatedAt: string;
 }
@@ -111,6 +113,7 @@ export interface InventoryState {
   detailLoading: boolean;
   submitting: boolean;
   adjusting: boolean;
+  adjustmentsLoading: boolean;
   error: string | null;
   pagination: {
     page: number;

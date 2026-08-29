@@ -22,6 +22,7 @@ import ConfirmDialog from '../../components/common/ConfirmDialog/ConfirmDialog';
 import InventoryTable from '../../features/inventory/components/InventoryTable';
 import InventoryFormDrawer from '../../features/inventory/components/InventoryFormDrawer';
 import AdjustStockDialog from '../../features/inventory/components/AdjustStockDialog';
+import StockAdjustmentHistoryDialog from '../../features/inventory/components/StockAdjustmentHistoryDialog';
 import { useAppDispatch, useAppSelector } from '../../Store/hooks';
 import {
   selectProductList,
@@ -96,6 +97,7 @@ const InventoryListPage: React.FC = () => {
   );
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
   const [adjustTarget, setAdjustTarget] = useState<Product | null>(null);
+  const [historyTarget, setHistoryTarget] = useState<Product | null>(null);
 
   // Derived live from `list` (not a stale snapshot) so that adjusting stock
   // while the Edit drawer is open — which refreshes `list` — immediately
@@ -127,6 +129,8 @@ const InventoryListPage: React.FC = () => {
     [dispatch, pagination.pageSize, sortBy, sortOrder, debouncedSearch, filters],
   );
 
+  // Search/filter/sort changes restart pagination at page 1 — the
+  // previously-selected page may no longer exist in the filtered result set.
   useEffect(() => {
     loadData(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -392,6 +396,7 @@ const InventoryListPage: React.FC = () => {
             onPageSizeChange={handlePageSizeChange}
             onEdit={(product) => setDrawerState({ mode: 'edit', productId: product.id })}
             onDelete={(product) => setDeleteTarget(product)}
+            onViewHistory={(product) => setHistoryTarget(product)}
             onRetry={() => loadData(pagination.page)}
           />
         </Box>
@@ -422,6 +427,12 @@ const InventoryListPage: React.FC = () => {
         product={adjustTarget}
         onClose={() => setAdjustTarget(null)}
         onSuccess={refreshAll}
+      />
+
+      <StockAdjustmentHistoryDialog
+        open={!!historyTarget}
+        product={historyTarget}
+        onClose={() => setHistoryTarget(null)}
       />
     </Box>
   );

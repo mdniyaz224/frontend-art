@@ -3,11 +3,23 @@
 // ============================================================
 
 import React, { useEffect, useCallback, useState } from 'react';
-import { Box, Button, ButtonGroup, Menu, MenuItem, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  FormControlLabel,
+  Menu,
+  MenuItem,
+  Switch,
+  TextField,
+  InputAdornment,
+  Typography,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import dayjs, { type Dayjs } from 'dayjs';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -25,10 +37,12 @@ import {
 } from '../../features/staff/staffSelectors';
 import { fetchStaffList, toggleStaffActiveThunk } from '../../features/staff/staffThunk';
 import { usePermission } from '../../hooks/usePermission';
+import { useDebounce } from '../../hooks/useDebounce';
 import { PERMISSIONS } from '../../utils/constants';
 import { staffAccentButtonSx } from '../../features/staff/staffAccent';
 import { usePageTitle } from '../../contexts/PageTitleContext';
-import type { Staff } from '../../features/staff/staffTypes';
+import { STAFF_ROLE_OPTIONS, type Staff } from '../../features/staff/staffTypes';
+import type { StaffRole } from '../../types/common';
 
 type Tab = 'staff' | 'attendance';
 
@@ -59,36 +73,52 @@ const StaffListPage: React.FC = () => {
   const [drawerState, setDrawerState] = useState<{ mode: 'create' | 'edit'; staff: Staff | null } | null>(
     null,
   );
+  const [search, setSearch] = useState('');
+  const [roleFilter, setRoleFilter] = useState<StaffRole | ''>('');
+  const [includeInactive, setIncludeInactive] = useState(false);
+  const debouncedSearch = useDebounce(search, 400);
 
-  const loadData = useCallback(() => {
-    dispatch(
-      fetchStaffList({
-        page: pagination.page,
-        pageSize: pagination.pageSize,
-        sortBy: sort.sortBy,
-        sortOrder: sort.sortOrder,
-      }),
-    );
-  }, [dispatch, pagination.page, pagination.pageSize, sort]);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  const handlePageChange = useCallback(
-    (page: number) => {
+  const loadData = useCallback(
+    (page = pagination.page) => {
       dispatch(
-        fetchStaffList({ page, pageSize: pagination.pageSize, sortBy: sort.sortBy, sortOrder: sort.sortOrder }),
+        fetchStaffList({
+          page,
+          pageSize: pagination.pageSize,
+          sortBy: sort.sortBy,
+          sortOrder: sort.sortOrder,
+          search: debouncedSearch || undefined,
+          role: roleFilter || undefined,
+          includeInactive,
+        }),
       );
     },
-    [dispatch, pagination.pageSize, sort],
+    [dispatch, pagination.page, pagination.pageSize, sort, debouncedSearch, roleFilter, includeInactive],
   );
+
+  // Search/role/includeInactive changes restart pagination at page 1 — the
+  // previously-selected page may no longer exist in the filtered result set.
+  useEffect(() => {
+    loadData(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch, roleFilter, includeInactive, sort]);
+
+  const handlePageChange = useCallback((page: number) => loadData(page), [loadData]);
 
   const handlePageSizeChange = useCallback(
     (pageSize: number) => {
-      dispatch(fetchStaffList({ page: 1, pageSize, sortBy: sort.sortBy, sortOrder: sort.sortOrder }));
+      dispatch(
+        fetchStaffList({
+          page: 1,
+          pageSize,
+          sortBy: sort.sortBy,
+          sortOrder: sort.sortOrder,
+          search: debouncedSearch || undefined,
+          role: roleFilter || undefined,
+          includeInactive,
+        }),
+      );
     },
-    [dispatch, sort],
+    [dispatch, sort, debouncedSearch, roleFilter, includeInactive],
   );
 
   const handleView = useCallback((staff: Staff) => navigate(`/staff/${staff.id}`), [navigate]);
@@ -178,6 +208,51 @@ const StaffListPage: React.FC = () => {
           Attendance
         </Button>
       </ButtonGroup>
+
+      {activeTab === 'staff' && (
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center', mb: 3 }}>
+          <TextField
+            size="small"
+            placeholder="Search by name, email, or phone"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            sx={{ minWidth: 260, flex: '1 1 260px' }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchRoundedIcon fontSize="small" sx={{ color: 'text.secondary' }} />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+          <TextField
+            select
+            size="small"
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value as StaffRole | '')}
+            sx={{ minWidth: 160 }}
+            slotProps={{ select: { displayEmpty: true } }}
+          >
+            <MenuItem value="">All roles</MenuItem>
+            {STAFF_ROLE_OPTIONS.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={includeInactive}
+                onChange={(e) => setIncludeInactive(e.target.checked)}
+              />
+            }
+            label="Show inactive"
+          />
+        </Box>
+      )}
 
       {activeTab === 'staff' ? (
         <StaffTable

@@ -17,3 +17,5 @@ export const selectProductStatusCounts = (state: RootState) => state.inventory.s
 export const selectStockAdjustments = (state: RootState) => state.inventory.adjustments;
 export const selectStockAdjustmentsPagination = (state: RootState) =>
   state.inventory.adjustmentsPagination;
+export const selectStockAdjustmentsLoading = (state: RootState) =>
+  state.inventory.adjustmentsLoading;

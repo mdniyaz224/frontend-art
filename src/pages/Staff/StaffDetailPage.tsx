@@ -57,6 +57,8 @@ const StaffDetailPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const canEdit = usePermission(PERMISSIONS.STAFF_EDIT);
+  // STAFF_DELETE gates activate/deactivate, not a real delete — staff are
+  // soft-archived only, there's no hard-delete endpoint (see staffApi.ts).
   const canManageStatus = usePermission(PERMISSIONS.STAFF_DELETE);
   const canManageRole = usePermission(PERMISSIONS.STAFF_MANAGE_ROLE);
 

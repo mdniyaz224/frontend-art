@@ -15,6 +15,8 @@ const rootReducer = combineReducers({
   staff: staffReducer,
   attendance: attendanceReducer,
   inventory: inventoryReducer,
+  // Key is `maintenances`, not `maintenanceLogs` — matches the feature's
+  // own selectors (maintenanceLogsSelectors.ts), which read state.maintenances.
   maintenances: maintenanceReducer,
   users: userReducer,
 });

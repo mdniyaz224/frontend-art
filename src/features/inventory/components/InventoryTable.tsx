@@ -3,8 +3,10 @@
 // ============================================================
 
 import React, { useCallback } from 'react';
+import { Box, Typography } from '@mui/material';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 import DataTable from '../../../components/common/DataTable/DataTable';
 import StatusChip from '../../../components/common/StatusChip/StatusChip';
 import InventoryNameCell from './InventoryNameCell';
@@ -28,6 +30,7 @@ interface InventoryTableProps {
   onPageSizeChange: (pageSize: number) => void;
   onEdit: (product: Product) => void;
   onDelete: (product: Product) => void;
+  onViewHistory: (product: Product) => void;
   onRetry: () => void;
 }
 
@@ -49,10 +52,13 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
   onPageSizeChange,
   onEdit,
   onDelete,
+  onViewHistory,
   onRetry,
 }) => {
   const canEdit = usePermission(PERMISSIONS.INVENTORY_EDIT);
   const canDelete = usePermission(PERMISSIONS.INVENTORY_DELETE);
+  // Matches be-boiler's GET /:id/adjustments RBAC (ADMIN, MANAGER only).
+  const canViewHistory = usePermission(PERMISSIONS.INVENTORY_ADJUST_STOCK);
 
   const columns: DataTableColumn<Product>[] = [
     {
@@ -85,6 +91,23 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
       minWidth: 140,
     },
     {
+      id: 'quantity',
+      label: 'Stock',
+      accessor: 'quantity',
+      sortable: true,
+      minWidth: 160,
+      render: (value, row) => (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography variant="body2">{value as number}</Typography>
+          {!row.isInStock ? (
+            <StatusChip label="Out of Stock" color="error" />
+          ) : row.isLowStock ? (
+            <StatusChip label="Low Stock" color="warning" />
+          ) : null}
+        </Box>
+      ),
+    },
+    {
       id: 'price',
       label: 'Retail Price',
       accessor: 'price',
@@ -108,6 +131,16 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
       });
     }
 
+    if (canViewHistory) {
+      actions.push({
+        id: 'history',
+        label: 'Stock History',
+        icon: <HistoryRoundedIcon fontSize="small" />,
+        onClick: onViewHistory,
+        color: 'inherit',
+      });
+    }
+
     if (canDelete) {
       actions.push({
         id: 'delete',
@@ -119,7 +152,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
     }
 
     return actions;
-  }, [canEdit, canDelete, onEdit, onDelete]);
+  }, [canEdit, canDelete, canViewHistory, onEdit, onDelete, onViewHistory]);
 
   return (
     <DataTable<Product>

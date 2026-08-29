@@ -28,6 +28,7 @@ const initialState: InventoryState = {
   detailLoading: false,
   submitting: false,
   adjusting: false,
+  adjustmentsLoading: false,
   error: null,
   pagination: DEFAULT_PAGINATION,
 };
@@ -169,7 +170,12 @@ const inventorySlice = createSlice({
 
     // ---- Fetch Stock Adjustments ----
     builder
+      .addCase(fetchStockAdjustmentsThunk.pending, (state) => {
+        state.adjustmentsLoading = true;
+        state.error = null;
+      })
       .addCase(fetchStockAdjustmentsThunk.fulfilled, (state, action) => {
+        state.adjustmentsLoading = false;
         state.adjustments = action.payload.adjustments;
         const { page, limit, total, totalPages } = action.payload.pagination;
         state.adjustmentsPagination = {
@@ -182,6 +188,7 @@ const inventorySlice = createSlice({
         };
       })
       .addCase(fetchStockAdjustmentsThunk.rejected, (state, action) => {
+        state.adjustmentsLoading = false;
         state.error = (action.payload as string) || 'Failed to fetch stock adjustment history';
       });
   },

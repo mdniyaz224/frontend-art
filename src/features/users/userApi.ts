@@ -9,6 +9,9 @@ import { buildQueryParams } from '../../utils/helpers';
 
 const BASE_URL = '/users';
 
+// Only GET /users (admin-only, see be-boiler's user.routes.ts) exists on the backend today —
+// getUserById/createUser/updateUser/deleteUser below have no matching route; account
+// creation/edit/removal lives under /staff instead (see staff.service.ts on the backend).
 export const getUserList = async (params: ListQueryParams): Promise<PaginatedResponse<UserRecord>> => {
   const queryString = buildQueryParams(params as Record<string, unknown>);
   const response = await axiosInstance.get<PaginatedResponse<UserRecord>>(`${BASE_URL}?${queryString}`);

@@ -14,6 +14,8 @@ const maintenanceLogsSlice = createSlice({
   name: 'maintenances',
   initialState,
   reducers: {
+    // No thunk/API file dispatches this yet — be-boiler has no maintenance concept at
+    // all (no route, controller, or model), so this slice is currently local-only state.
     setLogs(state, action: PayloadAction<MaintenanceLog[]>) {
       state.logs = action.payload;
     },
