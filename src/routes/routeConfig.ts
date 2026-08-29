@@ -7,12 +7,10 @@ import { PERMISSIONS } from '../utils/constants';
 
 // Lazy-loaded pages
 const DashboardPage = lazy(() => import('../pages/Dashboard/DashboardPage'));
-const AircraftListPage = lazy(() => import('../pages/Aircraft/AircraftListPage'));
-const AircraftCreatePage = lazy(() => import('../pages/Aircraft/AircraftCreatePage'));
-const AircraftEditPage = lazy(() => import('../pages/Aircraft/AircraftEditPage'));
-const AircraftDetailPage = lazy(() => import('../pages/Aircraft/AircraftDetailPage'));
+const StaffListPage = lazy(() => import('../pages/Staff/StaffListPage'));
+const StaffDetailPage = lazy(() => import('../pages/Staff/StaffDetailPage'));
+const InventoryListPage = lazy(() => import('../pages/Inventory/InventoryListPage'));
 const UsersPage = lazy(() => import('../pages/Users/UsersPage'));
-const PurchaseOrdersPage = lazy(() => import('../pages/PurchaseOrders/PurchaseOrdersPage'));
 const MaintenancePage = lazy(() => import('../pages/Maintenance/MaintenancePage'));
 
 export interface RouteConfig {
@@ -32,30 +30,25 @@ export const protectedRoutes: RouteConfig[] = [
     element: DashboardPage,
     label: 'Dashboard',
   },
-  // Aircraft
+  // Staff
   {
-    path: '/aircraft',
-    element: AircraftListPage,
-    permission: PERMISSIONS.AIRCRAFT_VIEW,
-    label: 'Aircraft',
+    path: '/staff',
+    element: StaffListPage,
+    permission: PERMISSIONS.STAFF_VIEW,
+    label: 'Staff',
   },
   {
-    path: '/aircraft/new',
-    element: AircraftCreatePage,
-    permission: PERMISSIONS.AIRCRAFT_CREATE,
-    label: 'Create Aircraft',
+    path: '/staff/:id',
+    element: StaffDetailPage,
+    permission: PERMISSIONS.STAFF_VIEW,
+    label: 'Staff Details',
   },
+  // Inventory
   {
-    path: '/aircraft/:id/edit',
-    element: AircraftEditPage,
-    permission: PERMISSIONS.AIRCRAFT_EDIT,
-    label: 'Edit Aircraft',
-  },
-  {
-    path: '/aircraft/:id',
-    element: AircraftDetailPage,
-    permission: PERMISSIONS.AIRCRAFT_VIEW,
-    label: 'Aircraft Details',
+    path: '/inventory',
+    element: InventoryListPage,
+    permission: PERMISSIONS.INVENTORY_VIEW,
+    label: 'Inventory',
   },
   // Users
   {
@@ -63,13 +56,6 @@ export const protectedRoutes: RouteConfig[] = [
     element: UsersPage,
     permission: PERMISSIONS.USER_VIEW,
     label: 'Users',
-  },
-  // Purchase Orders
-  {
-    path: '/purchase-orders',
-    element: PurchaseOrdersPage,
-    permission: PERMISSIONS.PURCHASE_ORDER_VIEW,
-    label: 'Purchase Orders',
   },
   // Maintenance
   {

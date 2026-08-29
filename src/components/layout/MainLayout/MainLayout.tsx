@@ -8,6 +8,7 @@ import { Box, useMediaQuery, useTheme } from '@mui/material';
 import Header from '../Header/Header';
 import Sidebar from '../Sidebar/Sidebar';
 import { SIDEBAR_WIDTH, SIDEBAR_COLLAPSED_WIDTH, HEADER_HEIGHT } from '../../../utils/constants';
+import { PageTitleProvider } from '../../../contexts/PageTitleContext';
 
 const MainLayout: React.FC = () => {
   const theme = useTheme();
@@ -33,33 +34,35 @@ const MainLayout: React.FC = () => {
   }, []);
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
-      <Sidebar
-        desktopOpen={desktopOpen}
-        mobileOpen={mobileOpen}
-        onMobileClose={handleCloseMobileSidebar}
-      />
-      <Header sidebarOpen={desktopOpen} onToggleSidebar={handleToggleSidebar} />
+    <PageTitleProvider>
+      <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+        <Sidebar
+          desktopOpen={desktopOpen}
+          mobileOpen={mobileOpen}
+          onMobileClose={handleCloseMobileSidebar}
+        />
+        <Header sidebarOpen={desktopOpen} onToggleSidebar={handleToggleSidebar} />
 
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          width: {
-            md: `calc(100% - ${desktopOpen ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH}px)`,
-          },
-          ml: {
-            md: `${desktopOpen ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH}px`,
-          },
-          mt: `${HEADER_HEIGHT}px`,
-          p: { xs: 2, sm: 3 },
-          transition: 'width 0.25s ease, margin-left 0.25s ease',
-          minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
-        }}
-      >
-        <Outlet />
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            width: {
+              md: `calc(100% - ${desktopOpen ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH}px)`,
+            },
+            ml: {
+              md: `${desktopOpen ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH}px`,
+            },
+            mt: `${HEADER_HEIGHT}px`,
+            p: { xs: 2, sm: 3 },
+            transition: 'width 0.25s ease, margin-left 0.25s ease',
+            minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
+          }}
+        >
+          <Outlet />
+        </Box>
       </Box>
-    </Box>
+    </PageTitleProvider>
   );
 };
 

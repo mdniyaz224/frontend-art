@@ -22,32 +22,32 @@ function renderWithPermissions(permissions: string[]) {
 
 describe('usePermission', () => {
   it('returns true when the user has the permission', () => {
-    const wrapper = renderWithPermissions(['AIRCRAFT_VIEW']);
-    const { result } = renderHook(() => usePermission('AIRCRAFT_VIEW'), { wrapper });
+    const wrapper = renderWithPermissions(['STAFF_VIEW']);
+    const { result } = renderHook(() => usePermission('STAFF_VIEW'), { wrapper });
     expect(result.current).toBe(true);
   });
 
   it('returns false when the user lacks the permission', () => {
-    const wrapper = renderWithPermissions(['AIRCRAFT_VIEW']);
-    const { result } = renderHook(() => usePermission('AIRCRAFT_EDIT'), { wrapper });
+    const wrapper = renderWithPermissions(['STAFF_VIEW']);
+    const { result } = renderHook(() => usePermission('STAFF_EDIT'), { wrapper });
     expect(result.current).toBe(false);
   });
 });
 
 describe('usePermissions', () => {
   it('requires every listed permission to be present', () => {
-    const wrapper = renderWithPermissions(['AIRCRAFT_VIEW', 'AIRCRAFT_EDIT']);
+    const wrapper = renderWithPermissions(['STAFF_VIEW', 'STAFF_EDIT']);
     const { result } = renderHook(
-      () => usePermissions(['AIRCRAFT_VIEW', 'AIRCRAFT_EDIT']),
+      () => usePermissions(['STAFF_VIEW', 'STAFF_EDIT']),
       { wrapper },
     );
     expect(result.current).toBe(true);
   });
 
   it('fails when any listed permission is missing', () => {
-    const wrapper = renderWithPermissions(['AIRCRAFT_VIEW']);
+    const wrapper = renderWithPermissions(['STAFF_VIEW']);
     const { result } = renderHook(
-      () => usePermissions(['AIRCRAFT_VIEW', 'AIRCRAFT_EDIT']),
+      () => usePermissions(['STAFF_VIEW', 'STAFF_EDIT']),
       { wrapper },
     );
     expect(result.current).toBe(false);
@@ -56,9 +56,9 @@ describe('usePermissions', () => {
 
 describe('useAnyPermission', () => {
   it('passes when at least one listed permission is present', () => {
-    const wrapper = renderWithPermissions(['AIRCRAFT_EDIT']);
+    const wrapper = renderWithPermissions(['STAFF_EDIT']);
     const { result } = renderHook(
-      () => useAnyPermission(['AIRCRAFT_VIEW', 'AIRCRAFT_EDIT']),
+      () => useAnyPermission(['STAFF_VIEW', 'STAFF_EDIT']),
       { wrapper },
     );
     expect(result.current).toBe(true);

@@ -4,20 +4,21 @@
 
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { loginApi, logoutApi, getCurrentUserApi } from './authApi';
-import { setTokens, clearTokens } from '../../services/interceptors';
+import { setAccessToken, clearAccessToken } from '../../services/interceptors';
 import { getApiErrorMessage } from '../../utils/helpers';
 import type { LoginRequest, LoginResponse, User } from './authTypes';
 
 /**
- * Login thunk — authenticates user and stores tokens.
+ * Login thunk — authenticates user and stores the access token.
+ * The refresh token is set as an httpOnly cookie by the backend response
+ * itself; there is nothing for the client to store for it.
  */
 export const login = createAsyncThunk<LoginResponse, LoginRequest>(
   'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await loginApi(credentials);
-      // Store tokens in localStorage for the interceptor
-      setTokens(response.data.accessToken, response.data.refreshToken);
+      setAccessToken(response.data.accessToken);
       return response.data;
     } catch (error) {
       return rejectWithValue(getApiErrorMessage(error));
@@ -34,7 +35,7 @@ export const logout = createAsyncThunk('auth/logout', async () => {
   } catch {
     // Ignore logout errors
   } finally {
-    clearTokens();
+    clearAccessToken();
   }
 });
 
@@ -47,9 +48,9 @@ export const getCurrentUser = createAsyncThunk<User, void>(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getCurrentUserApi();
-      return response.data;
+      return response.data.user;
     } catch (error) {
-      clearTokens();
+      clearAccessToken();
       return rejectWithValue(getApiErrorMessage(error));
     }
   },

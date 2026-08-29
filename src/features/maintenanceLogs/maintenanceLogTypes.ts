@@ -6,7 +6,7 @@ export type MaintenanceLogStatus = 'open' | 'closed';
 
 export interface MaintenanceLog {
   id: string;
-  aircraftId: string;
+  assetId: string;
   description: string;
   status: MaintenanceLogStatus;
   createdAt: string;

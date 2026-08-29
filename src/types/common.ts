@@ -21,9 +21,15 @@ export interface SelectOption {
 
 /**
  * User permission string literal.
- * Format: MODULE_ACTION (e.g., AIRCRAFT_CREATE, PURCHASE_ORDER_EDIT)
+ * Format: MODULE_ACTION (e.g., STAFF_CREATE, USER_EDIT)
  */
 export type Permission = string;
+
+/**
+ * Staff role — mirrors be-boiler's `Role` enum (src/types/enums.ts).
+ * The backend authorizes by this single field; it never returns a role object.
+ */
+export type StaffRole = 'admin' | 'manager' | 'cashier';
 
 /**
  * User role definition.

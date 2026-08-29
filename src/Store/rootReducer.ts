@@ -4,17 +4,19 @@
 
 import { combineReducers } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
-import aircraftReducer from '../features/aircraft/aircraftSlice';
+import staffReducer from '../features/staff/staffSlice';
+import attendanceReducer from '../features/attendance/attendanceSlice';
+import inventoryReducer from '../features/inventory/inventorySlice';
 import userReducer from '../features/users/userSlice';
-import purchaseOrderReducer from '../features/purchaseOrders/purchaseOrderSlice';
 import maintenanceReducer from '../features/maintenanceLogs/maintenanceLogsSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  aircraft: aircraftReducer,
+  staff: staffReducer,
+  attendance: attendanceReducer,
+  inventory: inventoryReducer,
   maintenances: maintenanceReducer,
   users: userReducer,
-  purchaseOrders: purchaseOrderReducer,
 });
 
 export default rootReducer;

@@ -19,14 +19,18 @@ import {
   Badge,
 } from '@mui/material';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../Store/hooks';
 import { selectCurrentUser, selectUserFullName } from '../../../features/auth/authSelectors';
 import { logout } from '../../../features/auth/authThunk';
 import { SIDEBAR_WIDTH, SIDEBAR_COLLAPSED_WIDTH, HEADER_HEIGHT } from '../../../utils/constants';
+import { getInitials } from '../../../utils/formatters';
+import { usePageTitleValue } from '../../../contexts/PageTitleContext';
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -35,8 +39,10 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar }) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const user = useAppSelector(selectCurrentUser);
   const fullName = useAppSelector(selectUserFullName);
+  const pageTitle = usePageTitleValue();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -51,11 +57,6 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar }) => {
   const handleLogout = () => {
     handleCloseMenu();
     dispatch(logout());
-  };
-
-  const getInitials = (): string => {
-    if (!user) return '';
-    return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
   };
 
   return (
@@ -74,13 +75,28 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar }) => {
       }}
     >
       <Toolbar sx={{ height: HEADER_HEIGHT }}>
-        <IconButton
-          edge="start"
-          onClick={onToggleSidebar}
-          sx={{ mr: 2, color: 'text.primary', transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
-        >
-          <MenuRoundedIcon />
-        </IconButton>
+        {pageTitle ? (
+          <>
+            <IconButton
+              edge="start"
+              onClick={() => navigate(-1)}
+              sx={{ mr: 1, color: 'text.primary' }}
+            >
+              <ChevronLeftRoundedIcon />
+            </IconButton>
+            <Typography variant="h6" sx={{ fontWeight: 700, fontSize: '1.1rem' }}>
+              {pageTitle}
+            </Typography>
+          </>
+        ) : (
+          <IconButton
+            edge="start"
+            onClick={onToggleSidebar}
+            sx={{ mr: 2, color: 'text.primary', transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
+          >
+            <MenuRoundedIcon />
+          </IconButton>
+        )}
 
         <Box sx={{ flexGrow: 1 }} />
 
@@ -107,6 +123,8 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar }) => {
           </IconButton>
         </Tooltip>
 
+        <Divider orientation="vertical" flexItem sx={{ mx: 1.5, my: 1 }} />
+
         {/* User Avatar + Menu */}
         <Tooltip title="Account">
           <IconButton onClick={handleOpenMenu} sx={{ p: 0.5, transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}>
@@ -118,9 +136,8 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar }) => {
                 fontSize: '0.875rem',
                 fontWeight: 600,
               }}
-              src={user?.avatar}
             >
-              {getInitials()}
+              {user ? getInitials(user.name) : ''}
             </Avatar>
           </IconButton>
         </Tooltip>

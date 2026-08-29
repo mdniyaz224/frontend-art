@@ -14,5 +14,5 @@ export const selectRoles = (state: RootState) => state.auth.roles;
 export const selectUserFullName = (state: RootState) => {
   const user = state.auth.user;
   if (!user) return '';
-  return `${user.firstName} ${user.lastName}`;
+  return user.name;
 };

@@ -10,7 +10,7 @@ import { selectPermissions } from '../features/auth/authSelectors';
  * Check if the current user has a specific permission.
  *
  * @example
- * const canEdit = usePermission('AIRCRAFT_EDIT');
+ * const canEdit = usePermission('STAFF_EDIT');
  * if (canEdit) { ... }
  */
 export function usePermission(permission: string): boolean {

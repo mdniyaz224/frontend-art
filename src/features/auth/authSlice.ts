@@ -5,6 +5,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { AuthState } from './authTypes';
 import { login, logout, getCurrentUser } from './authThunk';
+import { getPermissionsForRole } from '../../utils/rolePermissions';
 
 const initialState: AuthState = {
   user: null,
@@ -38,8 +39,8 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
-        state.permissions = action.payload.user.permissions;
-        state.roles = [action.payload.user.role.name];
+        state.permissions = getPermissionsForRole(action.payload.user.role);
+        state.roles = [action.payload.user.role];
         state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
@@ -68,8 +69,8 @@ const authSlice = createSlice({
         state.initializing = false;
         state.isAuthenticated = true;
         state.user = action.payload;
-        state.permissions = action.payload.permissions;
-        state.roles = [action.payload.role.name];
+        state.permissions = getPermissionsForRole(action.payload.role);
+        state.roles = [action.payload.role];
       })
       .addCase(getCurrentUser.rejected, (state) => {
         state.initializing = false;

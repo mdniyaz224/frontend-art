@@ -131,7 +131,7 @@ const LoginPage: React.FC = () => {
               Welcome Back
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-              Sign in to AeroFleet ERP System
+              Sign in to Foodline ERP
             </Typography>
           </Box>
 
@@ -150,7 +150,7 @@ const LoginPage: React.FC = () => {
                 control={control}
                 label="Email Address"
                 type="email"
-                placeholder="admin@aerofleet.com"
+                placeholder="admin@foodline.com"
                 disabled={loading}
                 autoComplete="email"
               />

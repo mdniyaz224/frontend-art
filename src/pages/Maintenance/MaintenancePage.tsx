@@ -13,7 +13,7 @@ const MaintenancePage: React.FC = () => {
     <Box>
       <PageHeader
         title="Maintenance"
-        subtitle="Track and manage aircraft maintenance schedules"
+        subtitle="Track and manage equipment maintenance schedules"
         breadcrumbs={[
           { label: 'Dashboard', path: '/dashboard' },
           { label: 'Maintenance' },
@@ -23,7 +23,7 @@ const MaintenancePage: React.FC = () => {
         <CardContent>
           <EmptyState
             message="Maintenance Module"
-            description="This module follows the Aircraft reference implementation. Add maintenance management logic following the same feature-based pattern."
+            description="This module follows the Staff reference implementation. Add maintenance management logic following the same feature-based pattern."
             icon={<BuildRoundedIcon sx={{ fontSize: 32, color: 'text.secondary' }} />}
           />
         </CardContent>

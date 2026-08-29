@@ -16,9 +16,9 @@ import {
 } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
-import FlightRoundedIcon from '@mui/icons-material/FlightRounded';
+import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
+import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
-import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import BuildRoundedIcon from '@mui/icons-material/BuildRounded';
 import { useAppSelector } from '../../../Store/hooks';
 import { selectPermissions } from '../../../features/auth/authSelectors';
@@ -34,11 +34,10 @@ interface SidebarItem {
 
 const MENU_ITEMS: SidebarItem[] = [
   { id: 'dashboard', label: 'Dashboard', path: '/dashboard', icon: <DashboardRoundedIcon />, permission: PERMISSIONS.DASHBOARD_VIEW },
-  { id: 'aircraft', label: 'Aircraft', path: '/aircraft', icon: <FlightRoundedIcon />, permission: PERMISSIONS.AIRCRAFT_VIEW },
+  { id: 'staff', label: 'Staff', path: '/staff', icon: <BadgeRoundedIcon />, permission: PERMISSIONS.STAFF_VIEW },
+  { id: 'inventory', label: 'Inventory', path: '/inventory', icon: <Inventory2RoundedIcon />, permission: PERMISSIONS.INVENTORY_VIEW },
   { id: 'users', label: 'Users', path: '/users', icon: <PeopleRoundedIcon />, permission: PERMISSIONS.USER_VIEW },
-  { id: 'purchase-orders', label: 'Purchase Orders', path: '/purchase-orders', icon: <ShoppingCartRoundedIcon />, permission: PERMISSIONS.PURCHASE_ORDER_VIEW },
   { id: 'maintenance', label: 'Maintenance', path: '/maintenance', icon: <BuildRoundedIcon />, permission: PERMISSIONS.MAINTENANCE_VIEW },
-
 ];
 
 interface SidebarProps {
@@ -102,10 +101,10 @@ const Sidebar: React.FC<SidebarProps> = ({ desktopOpen, mobileOpen, onMobileClos
         {open && (
           <Box sx={{ ml: 1.5 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 700, lineHeight: 1.2 }}>
-              AeroFleet
+              Foodline
             </Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary', lineHeight: 1 }}>
-              ERP System
+              Staff Manager
             </Typography>
           </Box>
         )}
@@ -184,7 +183,7 @@ const Sidebar: React.FC<SidebarProps> = ({ desktopOpen, mobileOpen, onMobileClos
       {open && (
         <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider' }}>
           <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-            © {new Date().getFullYear()} AeroFleet ERP
+            © {new Date().getFullYear()} Foodline ERP
           </Typography>
         </Box>
       )}

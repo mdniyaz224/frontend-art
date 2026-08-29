@@ -23,7 +23,7 @@ const UsersPage: React.FC = () => {
         <CardContent>
           <EmptyState
             message="Users Module"
-            description="This module follows the Aircraft reference implementation. Add user management logic following the same feature-based pattern."
+            description="This module follows the Staff reference implementation. Add user management logic following the same feature-based pattern."
             icon={<PeopleRoundedIcon sx={{ fontSize: 32, color: 'text.secondary' }} />}
           />
         </CardContent>

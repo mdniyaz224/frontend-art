@@ -18,6 +18,7 @@ import {
   Box,
   Skeleton,
   Typography,
+  alpha,
 } from '@mui/material';
 import type { DataTableColumn, DataTableAction } from '../../../types/common';
 import type { PaginationMeta } from '../../../types/api';
@@ -212,6 +213,18 @@ function DataTable<T extends { id: string }>({
                                 color={action.color || 'inherit'}
                                 onClick={() => action.onClick(row)}
                                 disabled={action.disabled ? action.disabled(row) : false}
+                                sx={{
+                                  bgcolor: (theme) =>
+                                    action.color && action.color !== 'inherit'
+                                      ? alpha(theme.palette[action.color].main, 0.16)
+                                      : alpha(theme.palette.text.primary, 0.08),
+                                  '&:hover': {
+                                    bgcolor: (theme) =>
+                                      action.color && action.color !== 'inherit'
+                                        ? alpha(theme.palette[action.color].main, 0.28)
+                                        : alpha(theme.palette.text.primary, 0.16),
+                                  },
+                                }}
                               >
                                 {action.icon}
                               </IconButton>

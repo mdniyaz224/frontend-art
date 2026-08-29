@@ -44,11 +44,13 @@
     "@reduxjs/toolkit": "^2.1.0",
     "axios": "^1.19.0",
     "dayjs": "^1.11.23",
+    "formik": "^2.4.9",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-hook-form": "^7.86.0",
     "react-redux": "^9.3.0",
     "react-router-dom": "^7.18.2",
+    "recharts": "^3.10.1",
     "yup": "^1.7.1"
   }
 }

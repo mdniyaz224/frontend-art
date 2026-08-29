@@ -3,7 +3,7 @@
 // ============================================================
 //
 // REQUEST INTERCEPTOR
-// - Attaches the Authorization header with the Bearer token
+// - Attaches the Authorization header with the Bearer access token
 // - Skips if no token is present (public endpoints)
 //
 // RESPONSE INTERCEPTOR
@@ -11,18 +11,23 @@
 // - Implements refresh-token flow with request queuing
 //
 // REFRESH TOKEN FLOW
-// 1. A request returns 401 (token expired)
+// The backend never puts the refresh token in a JSON body — it is set as an
+// httpOnly cookie on /auth/login and read back from that same cookie on
+// /auth/refresh-token, so the browser (not this code) carries it. Only the
+// short-lived access token is kept in localStorage for the Authorization header.
+//
+// 1. A request returns 401 (access token expired)
 // 2. If no refresh is in progress, start one:
 //    a. Set isRefreshing = true
-//    b. Call the refresh endpoint
-//    c. Update stored tokens
+//    b. Call POST /auth/refresh-token (cookie sent automatically via withCredentials)
+//    c. Store the new access token
 //    d. Retry the original request
 //    e. Process the queued requests
 // 3. If a refresh IS already in progress, queue the failed request
 //    and return a Promise that resolves/rejects when the refresh completes.
 // 4. If the refresh itself fails:
 //    a. Reject all queued requests
-//    b. Clear auth state
+//    b. Clear the stored access token
 //    c. Redirect to login
 
 import axiosInstance from './axios';
@@ -31,19 +36,15 @@ import type { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 
 // ----- Token helpers -----
 
 const TOKEN_KEY = 'erp_access_token';
-const REFRESH_TOKEN_KEY = 'erp_refresh_token';
 
 export const getAccessToken = (): string | null => localStorage.getItem(TOKEN_KEY);
-export const getRefreshToken = (): string | null => localStorage.getItem(REFRESH_TOKEN_KEY);
 
-export const setTokens = (accessToken: string, refreshToken: string): void => {
+export const setAccessToken = (accessToken: string): void => {
   localStorage.setItem(TOKEN_KEY, accessToken);
-  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
 };
 
-export const clearTokens = (): void => {
+export const clearAccessToken = (): void => {
   localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_KEY);
 };
 
 // ----- Refresh-token queue -----
@@ -99,7 +100,7 @@ export const setupInterceptors = (): void => {
       const status = error.response?.status;
 
       // ---- 401: Attempt token refresh ----
-      if (status === 401 && !originalRequest._retry) {
+      if (status === 401 && !originalRequest._retry && originalRequest.url !== '/auth/refresh-token') {
         // Prevent infinite retry loops
         originalRequest._retry = true;
 
@@ -120,17 +121,11 @@ export const setupInterceptors = (): void => {
         isRefreshing = true;
 
         try {
-          const refreshToken = getRefreshToken();
-          if (!refreshToken) throw new Error('No refresh token available');
-
-          const { data } = await axiosInstance.post('/auth/refresh', {
-            refreshToken,
-          });
+          // No body — the refresh token travels as an httpOnly cookie.
+          const { data } = await axiosInstance.post('/auth/refresh-token');
 
           const newAccessToken: string = data.data.accessToken;
-          const newRefreshToken: string = data.data.refreshToken;
-
-          setTokens(newAccessToken, newRefreshToken);
+          setAccessToken(newAccessToken);
           processQueue(null, newAccessToken);
 
           // Retry the original request with the new token
@@ -140,7 +135,7 @@ export const setupInterceptors = (): void => {
           return axiosInstance(originalRequest);
         } catch (refreshError) {
           processQueue(refreshError, null);
-          clearTokens();
+          clearAccessToken();
 
           // Redirect to login — avoid using React Router here to keep
           // interceptors framework-agnostic

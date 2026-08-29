@@ -16,11 +16,22 @@ import type { ApiError } from '../types/api';
 export const getApiErrorMessage = (error: unknown): string => {
   // Axios error with a response from the server
   if (isAxiosError(error) && error.response?.data) {
-    const data = error.response.data as Partial<ApiError> & { message?: string };
+    const data = error.response.data as Partial<ApiError> & {
+      message?: string;
+      details?: { path: string; message: string }[] | string[];
+    };
 
     // Validation errors — join all field messages
     if (data.errors && data.errors.length > 0) {
       return data.errors.map((e) => `${e.field}: ${e.message}`).join(', ');
+    }
+
+    // be-boiler's error handler reports Zod/Mongoose validation issues under
+    // `details`, either as {path,message} pairs or plain message strings.
+    if (data.details && data.details.length > 0) {
+      return data.details
+        .map((d) => (typeof d === 'string' ? d : `${d.path}: ${d.message}`))
+        .join(', ');
     }
 
     // Standard error message
