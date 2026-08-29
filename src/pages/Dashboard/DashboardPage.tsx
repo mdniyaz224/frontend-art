@@ -14,8 +14,14 @@ import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import RemoveShoppingCartRoundedIcon from '@mui/icons-material/RemoveShoppingCartRounded';
+import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
+import AccountBalanceWalletRoundedIcon from '@mui/icons-material/AccountBalanceWalletRounded';
+import TableRestaurantRoundedIcon from '@mui/icons-material/TableRestaurantRounded';
 import PageHeader from '../../components/common/PageHeader/PageHeader';
 import StatCard from './components/StatCard';
+import SparklineStatCard from './components/SparklineStatCard';
+import PopularDishesCard from './components/PopularDishesCard';
+import OverviewChart from './components/OverviewChart';
 import DonutStatChart, { type DonutSlice } from './components/DonutStatChart';
 import InventoryCategoryChart, { type CategoryDatum } from './components/InventoryCategoryChart';
 import NeedsAttentionList from './components/NeedsAttentionList';
@@ -23,7 +29,7 @@ import QuickActionsCard from './components/QuickActionsCard';
 import { useAppDispatch, useAppSelector } from '../../Store/hooks';
 import { usePermission } from '../../hooks/usePermission';
 import { PERMISSIONS } from '../../utils/constants';
-import { CATEGORICAL_SEQUENCE, STATUS_COLORS } from './dashboardPalette';
+import { CATEGORICAL_SEQUENCE, OVERVIEW_SERIES_COLORS, STATUS_COLORS } from './dashboardPalette';
 import { fetchStaffList } from '../../features/staff/staffThunk';
 import { selectStaffList, selectStaffLoading, selectStaffPagination } from '../../features/staff/staffSelectors';
 import { STAFF_ROLE_OPTIONS } from '../../features/staff/staffTypes';
@@ -34,6 +40,19 @@ import {
   selectProductStatusCounts,
 } from '../../features/inventory/inventorySelectors';
 import { selectUserFullName } from '../../features/auth/authSelectors';
+import { fetchDashboardSummary, fetchPopularDishes, fetchOverview } from '../../features/sales/salesThunk';
+import {
+  selectDashboardSummary,
+  selectSummaryLoading,
+  selectPopularByQuantity,
+  selectPopularByRevenue,
+  selectPopularLoading,
+  selectOverviewSeries,
+  selectOverviewRange,
+  selectOverviewLoading,
+} from '../../features/sales/salesSelectors';
+import type { OverviewRange } from '../../features/sales/salesTypes';
+import { formatCompactCurrency, formatCurrency, formatDate } from '../../utils/formatters';
 
 /** Backend caps list endpoints at 100 per page (see product/staff validators) —
  * plenty for a small-team ERP's breakdown charts without adding new backend
@@ -46,6 +65,16 @@ const DashboardPage: React.FC = () => {
 
   const canViewStaff = usePermission(PERMISSIONS.STAFF_VIEW);
   const canViewInventory = usePermission(PERMISSIONS.INVENTORY_VIEW);
+  const canExportReports = usePermission(PERMISSIONS.REPORT_EXPORT);
+
+  const summary = useAppSelector(selectDashboardSummary);
+  const summaryLoading = useAppSelector(selectSummaryLoading);
+  const popularByQuantity = useAppSelector(selectPopularByQuantity);
+  const popularByRevenue = useAppSelector(selectPopularByRevenue);
+  const popularLoading = useAppSelector(selectPopularLoading);
+  const overviewSeries = useAppSelector(selectOverviewSeries);
+  const overviewRange = useAppSelector(selectOverviewRange);
+  const overviewLoading = useAppSelector(selectOverviewLoading);
 
   const staffList = useAppSelector(selectStaffList);
   const staffLoading = useAppSelector(selectStaffLoading);
@@ -67,6 +96,40 @@ const DashboardPage: React.FC = () => {
       dispatch(fetchProductStatusCountsThunk());
     }
   }, [dispatch, canViewInventory]);
+
+  // Restaurant-wide sales analytics — available to all three roles (all
+  // carry DASHBOARD_VIEW), unlike the Staff/Inventory sections below.
+  useEffect(() => {
+    dispatch(fetchDashboardSummary());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchPopularDishes({ sortBy: 'quantity', limit: 4 }));
+    dispatch(fetchPopularDishes({ sortBy: 'revenue', limit: 4 }));
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchOverview(overviewRange));
+  }, [dispatch, overviewRange]);
+
+  const handleOverviewRangeChange = (range: OverviewRange) => {
+    dispatch(fetchOverview(range));
+  };
+
+  const handleExportOverview = () => {
+    const header = 'period,sales,revenue';
+    const rows = overviewSeries.map((point) => `${point.period},${point.sales},${point.revenue}`);
+    const csv = [header, ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `sales-overview-${overviewRange}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   const staffByRole: DonutSlice[] = useMemo(
     () =>
@@ -117,6 +180,90 @@ const DashboardPage: React.FC = () => {
             : "Welcome to Foodline ERP — here's what's happening today."
         }
       />
+
+      {/* Restaurant-wide sales analytics — unconditional, all roles see it */}
+      <Grid container spacing={3} sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={6} lg={4}>
+          <SparklineStatCard
+            title="Daily Sales"
+            value={formatCompactCurrency(summary?.dailySales.value ?? 0)}
+            subtitle={summary ? formatDate(summary.dailySales.date, 'D MMMM YYYY') : '—'}
+            icon={<PaidRoundedIcon sx={{ color: '#fff', fontSize: 20 }} />}
+            iconColor={OVERVIEW_SERIES_COLORS.sales}
+            sparkline={summary?.dailySales.sparkline ?? []}
+            sparklineColor={OVERVIEW_SERIES_COLORS.sales}
+            loading={summaryLoading && !summary}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} lg={4}>
+          <SparklineStatCard
+            title="Monthly Revenue"
+            value={formatCompactCurrency(summary?.monthlyRevenue.value ?? 0)}
+            subtitle={summary?.monthlyRevenue.rangeLabel ?? '—'}
+            icon={<AccountBalanceWalletRoundedIcon sx={{ color: '#fff', fontSize: 20 }} />}
+            iconColor={OVERVIEW_SERIES_COLORS.revenue}
+            sparkline={summary?.monthlyRevenue.sparkline ?? []}
+            sparklineColor={OVERVIEW_SERIES_COLORS.revenue}
+            loading={summaryLoading && !summary}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} lg={4}>
+          <SparklineStatCard
+            title="Table Occupancy"
+            value={`${summary?.tableOccupancy.totalTables ?? 0} Tables`}
+            subtitle={
+              summary
+                ? `${summary.tableOccupancy.occupiedCount} of ${summary.tableOccupancy.totalTables} occupied (${summary.tableOccupancy.occupancyPercent}%)`
+                : '—'
+            }
+            icon={<TableRestaurantRoundedIcon sx={{ color: '#fff', fontSize: 20 }} />}
+            iconColor={CATEGORICAL_SEQUENCE[0]}
+            sparkline={summary?.tableOccupancy.sparkline ?? []}
+            sparklineColor={CATEGORICAL_SEQUENCE[0]}
+            loading={summaryLoading && !summary}
+          />
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={3} sx={{ mb: 3 }}>
+        <Grid item xs={12} md={6}>
+          <PopularDishesCard
+            title="Top Dishes — By Orders"
+            dishes={popularByQuantity}
+            subLine={(dish) => `Order: ${dish.quantitySold} sold`}
+            loading={popularLoading && popularByQuantity.length === 0}
+            emptyMessage="No orders yet."
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <PopularDishesCard
+            title="Top Dishes — By Revenue"
+            dishes={popularByRevenue}
+            subLine={(dish) => `Revenue: ${formatCurrency(dish.revenue)}`}
+            loading={popularLoading && popularByRevenue.length === 0}
+            emptyMessage="No orders yet."
+          />
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid item xs={12}>
+          <OverviewChart
+            data={overviewSeries}
+            range={overviewRange}
+            onRangeChange={handleOverviewRangeChange}
+            onExport={handleExportOverview}
+            canExport={canExportReports}
+            loading={overviewLoading && overviewSeries.length === 0}
+          />
+        </Grid>
+      </Grid>
+
+      {(canViewStaff || canViewInventory) && (
+        <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
+          Team &amp; Inventory
+        </Typography>
+      )}
 
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {canViewStaff && (

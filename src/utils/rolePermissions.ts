@@ -26,6 +26,8 @@ const ROLE_PERMISSIONS: Record<StaffRole, string[]> = {
     PERMISSIONS.INVENTORY_EDIT,
     PERMISSIONS.INVENTORY_DELETE,
     PERMISSIONS.INVENTORY_ADJUST_STOCK,
+    PERMISSIONS.REPORT_VIEW,
+    PERMISSIONS.REPORT_EXPORT,
   ],
   manager: [
     PERMISSIONS.DASHBOARD_VIEW,
@@ -37,7 +39,11 @@ const ROLE_PERMISSIONS: Record<StaffRole, string[]> = {
     PERMISSIONS.INVENTORY_EDIT,
     PERMISSIONS.INVENTORY_DELETE,
     PERMISSIONS.INVENTORY_ADJUST_STOCK,
+    PERMISSIONS.REPORT_VIEW,
+    PERMISSIONS.REPORT_EXPORT,
   ],
+  // Cashiers see the sales dashboard (real-time restaurant view) but cannot
+  // export financial reports — that stays admin/manager-only.
   cashier: [PERMISSIONS.DASHBOARD_VIEW, PERMISSIONS.INVENTORY_VIEW],
 };
 

@@ -49,3 +49,20 @@ export const tooltipLabelStyle = {
 export const tooltipItemStyle = {
   color: CHART_INK.secondary,
 } as const;
+
+/** Two-line series pair for the Overview (Sales vs. Revenue) chart — a
+ * separate slot from CATEGORICAL_SEQUENCE because it's validated for
+ * line-vs-line contrast at thin (~2px) stroke widths, not pie/bar fills.
+ * A literal gray "Revenue" line (the mockup's original look) fails the
+ * validator's chroma floor (reads as ink, not a data color) and its CVD
+ * separation from pink drops to ΔE 5.4 — this app's own theme.secondary
+ * main (violet) is the nearest passing substitute and doubles as brand
+ * consistency. Validated with the dataviz skill's validator:
+ * `node scripts/validate_palette.js "#ec4899,#8b5cf6" --mode dark --surface "#0f172a" --pairs all`
+ * → ALL CHECKS PASS (worst all-pairs CVD ΔE 15.4 protan, normal-vision ΔE 22.6,
+ * both >=3:1 contrast). Never swap in an ungraded gray for `revenue`.
+ */
+export const OVERVIEW_SERIES_COLORS = {
+  sales: '#ec4899',
+  revenue: '#8b5cf6',
+} as const;

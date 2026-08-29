@@ -9,6 +9,7 @@ import attendanceReducer from '../features/attendance/attendanceSlice';
 import inventoryReducer from '../features/inventory/inventorySlice';
 import userReducer from '../features/users/userSlice';
 import maintenanceReducer from '../features/maintenanceLogs/maintenanceLogsSlice';
+import salesReducer from '../features/sales/salesSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   // own selectors (maintenanceLogsSelectors.ts), which read state.maintenances.
   maintenances: maintenanceReducer,
   users: userReducer,
+  sales: salesReducer,
 });
 
 export default rootReducer;

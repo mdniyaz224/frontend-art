@@ -36,6 +36,25 @@ export const formatCurrency = (
 };
 
 /**
+ * Format a number as compact currency for headline stat tiles, e.g.
+ * 2000 -> "$2K", 55000 -> "$55K". Use `formatCurrency` everywhere a precise
+ * amount matters (line items, exports); this is for glanceable big numbers.
+ */
+export const formatCompactCurrency = (
+  amount: number | null | undefined,
+  currency = 'USD',
+  locale = 'en-US',
+): string => {
+  if (amount == null) return '—';
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(amount);
+};
+
+/**
  * Format a number with thousands separators.
  */
 export const formatNumber = (
