@@ -9,5 +9,6 @@ Concept-by-concept reference for the `fe-boilerplate` frontend. Each doc covers 
 | [staff-management.md](./staff-management.md) | Staff CRUD, role assignment, search/filter, deactivate, and the Attendance tab |
 | [inventory-management.md](./inventory-management.md) | Product CRUD, the Adjust Stock flow, the stock-adjustment audit trail viewer, low-stock indicators, search/filter |
 | [user-and-maintenance.md](./user-and-maintenance.md) | The Users feature and the MaintenanceLogs feature (the latter is a frontend-only stub with no backend counterpart yet) |
+| [deployment-aws.md](./deployment-aws.md) | Production AWS deployment: S3 + CloudFront (OAC), OIDC-based CI/CD |
 
 For backend API context (endpoints, request/response shapes, RBAC enforcement), see `be-boiler`'s own [docs/](../../be-boiler/docs/README.md).

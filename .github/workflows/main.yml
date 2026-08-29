@@ -103,3 +103,44 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
+
+  # Requires repo variables AWS_ROLE_ARN, AWS_REGION, S3_BUCKET,
+  # CLOUDFRONT_DISTRIBUTION_ID (Settings > Actions > Variables) — see
+  # docs/deployment-aws.md. Deploys the Vite build straight to S3+CloudFront;
+  # unrelated to the GHCR image built above (that path serves the Dockerfile's
+  # Nginx-container option, kept for anyone hosting it that way instead).
+  deploy-s3-cloudfront:
+    name: Deploy to S3 + CloudFront
+    needs: [build-and-test, e2e-test]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      id-token: write # required for OIDC -> AssumeRoleWithWebIdentity
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Application
+        run: npm run build
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Sync build to S3
+        run: aws s3 sync ./dist s3://${{ vars.S3_BUCKET }} --delete
+
+      - name: Invalidate CloudFront cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
