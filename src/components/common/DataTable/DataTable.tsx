@@ -2,7 +2,7 @@
 // DataTable — Generic Reusable Enterprise Data Table
 // ============================================================
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Table,
   TableBody,
@@ -20,6 +20,7 @@ import {
   Typography,
   alpha,
 } from '@mui/material';
+import { TableVirtuoso, type TableComponents } from 'react-virtuoso';
 import type { DataTableColumn, DataTableAction } from '../../../types/common';
 import type { PaginationMeta } from '../../../types/api';
 import { PAGE_SIZE_OPTIONS } from '../../../utils/constants';
@@ -41,7 +42,6 @@ interface DataTableProps<T extends { id: string }> {
   onRetry?: () => void;
   emptyMessage?: string;
   emptyIcon?: React.ReactNode;
-  stickyHeader?: boolean;
   maxHeight?: number | string;
 }
 
@@ -60,8 +60,7 @@ function DataTable<T extends { id: string }>({
   onRetry,
   emptyMessage = 'No data found',
   emptyIcon,
-  stickyHeader = false,
-  maxHeight,
+  maxHeight = 600,
 }: DataTableProps<T>) {
   const handleSort = useCallback(
     (field: string) => {
@@ -99,6 +98,33 @@ function DataTable<T extends { id: string }>({
     return String(value);
   };
 
+  // Row virtualization: only the rows currently in the viewport are mounted,
+  // so large pages/pageSizes stay smooth to scroll.
+  const virtuosoComponents: TableComponents<T> = useMemo(
+    () => ({
+      Scroller: React.forwardRef<HTMLDivElement>((props, ref) => (
+        <TableContainer {...props} ref={ref} />
+      )),
+      Table: (props) => (
+        <Table {...props} size="medium" sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} />
+      ),
+      TableHead: React.forwardRef<HTMLTableSectionElement>((props, ref) => (
+        <TableHead {...props} ref={ref} />
+      )),
+      TableRow: ({ item: _item, ...props }) => (
+        <TableRow
+          hover
+          {...props}
+          sx={{ opacity: loading ? 0.5 : 1, transition: 'opacity 0.2s, background-color 0.2s' }}
+        />
+      ),
+      TableBody: React.forwardRef<HTMLTableSectionElement>((props, ref) => (
+        <TableBody {...props} ref={ref} />
+      )),
+    }),
+    [loading],
+  );
+
   // Error state
   if (error && !loading) {
     return <ErrorState message={error} onRetry={onRetry} />;
@@ -112,6 +138,9 @@ function DataTable<T extends { id: string }>({
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell sx={{ width: 64 }}>
+                  <Skeleton width={24} />
+                </TableCell>
                 {columns.map((col) => (
                   <TableCell key={col.id}>
                     <Skeleton width={100} />
@@ -123,6 +152,9 @@ function DataTable<T extends { id: string }>({
             <TableBody>
               {Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
+                  <TableCell sx={{ width: 64 }}>
+                    <Skeleton width={24} />
+                  </TableCell>
                   {columns.map((col) => (
                     <TableCell key={col.id}>
                       <Skeleton />
@@ -147,98 +179,95 @@ function DataTable<T extends { id: string }>({
     return <EmptyState message={emptyMessage} icon={emptyIcon} />;
   }
 
+  // Serial numbers continue across pages rather than restarting at 1 on every page.
+  const serialStart = pagination ? (pagination.page - 1) * pagination.pageSize : 0;
+
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: maxHeight }}>
-        <Table stickyHeader={stickyHeader} size="medium">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align || 'left'}
-                  sx={{
-                    minWidth: column.minWidth,
-                    width: column.width,
-                    bgcolor: 'background.paper',
-                  }}
-                >
-                  {column.sortable && onSort ? (
-                    <TableSortLabel
-                      active={sortBy === column.id}
-                      direction={sortBy === column.id ? sortOrder : 'asc'}
-                      onClick={() => handleSort(column.id)}
-                    >
-                      {column.label}
-                    </TableSortLabel>
-                  ) : (
-                    column.label
-                  )}
-                </TableCell>
-              ))}
-              {actions && actions.length > 0 && (
-                <TableCell align="right" sx={{ bgcolor: 'background.paper', minWidth: 120 }}>
-                  <Typography variant="caption" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Actions
-                  </Typography>
-                </TableCell>
-              )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow
-                key={row.id}
-                hover
+      <TableVirtuoso
+        style={{ height: maxHeight }}
+        data={rows}
+        components={virtuosoComponents}
+        fixedHeaderContent={() => (
+          <TableRow>
+            <TableCell sx={{ width: 64, bgcolor: 'background.paper' }}>S.No</TableCell>
+            {columns.map((column) => (
+              <TableCell
+                key={column.id}
+                align={column.align || 'left'}
                 sx={{
-                  opacity: loading ? 0.5 : 1,
-                  transition: 'opacity 0.2s, background-color 0.2s',
+                  minWidth: column.minWidth,
+                  width: column.width,
+                  bgcolor: 'background.paper',
                 }}
               >
-                {columns.map((column) => (
-                  <TableCell key={column.id} align={column.align || 'left'}>
-                    {getCellValue(column, row)}
-                  </TableCell>
-                ))}
-                {actions && actions.length > 0 && (
-                  <TableCell align="right">
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 0.5 }}>
-                      {actions
-                        .filter((action) => !action.show || action.show(row))
-                        .map((action) => (
-                          <Tooltip key={action.id} title={action.label}>
-                            <span>
-                              <IconButton
-                                size="small"
-                                color={action.color || 'inherit'}
-                                onClick={() => action.onClick(row)}
-                                disabled={action.disabled ? action.disabled(row) : false}
-                                sx={{
-                                  bgcolor: (theme) =>
-                                    action.color && action.color !== 'inherit'
-                                      ? alpha(theme.palette[action.color].main, 0.16)
-                                      : alpha(theme.palette.text.primary, 0.08),
-                                  '&:hover': {
-                                    bgcolor: (theme) =>
-                                      action.color && action.color !== 'inherit'
-                                        ? alpha(theme.palette[action.color].main, 0.28)
-                                        : alpha(theme.palette.text.primary, 0.16),
-                                  },
-                                }}
-                              >
-                                {action.icon}
-                              </IconButton>
-                            </span>
-                          </Tooltip>
-                        ))}
-                    </Box>
-                  </TableCell>
+                {column.sortable && onSort ? (
+                  <TableSortLabel
+                    active={sortBy === column.id}
+                    direction={sortBy === column.id ? sortOrder : 'asc'}
+                    onClick={() => handleSort(column.id)}
+                  >
+                    {column.label}
+                  </TableSortLabel>
+                ) : (
+                  column.label
                 )}
-              </TableRow>
+              </TableCell>
             ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            {actions && actions.length > 0 && (
+              <TableCell align="right" sx={{ bgcolor: 'background.paper', minWidth: 120 }}>
+                <Typography variant="caption" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Actions
+                </Typography>
+              </TableCell>
+            )}
+          </TableRow>
+        )}
+        itemContent={(index, row) => (
+          <>
+            <TableCell sx={{ width: 64, color: 'text.secondary' }}>{serialStart + index + 1}</TableCell>
+            {columns.map((column) => (
+              <TableCell key={column.id} align={column.align || 'left'}>
+                {getCellValue(column, row)}
+              </TableCell>
+            ))}
+            {actions && actions.length > 0 && (
+              <TableCell align="right">
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 0.5 }}>
+                  {actions
+                    .filter((action) => !action.show || action.show(row))
+                    .map((action) => (
+                      <Tooltip key={action.id} title={action.label}>
+                        <span>
+                          <IconButton
+                            size="small"
+                            color={action.color || 'inherit'}
+                            onClick={() => action.onClick(row)}
+                            disabled={action.disabled ? action.disabled(row) : false}
+                            sx={{
+                              bgcolor: (theme) =>
+                                action.color && action.color !== 'inherit'
+                                  ? alpha(theme.palette[action.color].main, 0.16)
+                                  : alpha(theme.palette.text.primary, 0.08),
+                              '&:hover': {
+                                bgcolor: (theme) =>
+                                  action.color && action.color !== 'inherit'
+                                    ? alpha(theme.palette[action.color].main, 0.28)
+                                    : alpha(theme.palette.text.primary, 0.16),
+                              },
+                            }}
+                          >
+                            {action.icon}
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                    ))}
+                </Box>
+              </TableCell>
+            )}
+          </>
+        )}
+      />
       {pagination && (
         <TablePagination
           component="div"
