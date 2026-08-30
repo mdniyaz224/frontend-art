@@ -6,9 +6,7 @@ export const API_ENDPOINTS = {
   },
 
   USERS: {
-    BASE: '/users',
     ME: '/users/me',
-    BY_ID: (id: string) => `/users/${id}`,
   },
 
   STAFF: {

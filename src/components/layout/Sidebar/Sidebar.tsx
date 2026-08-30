@@ -14,8 +14,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
-import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
-import BuildRoundedIcon from '@mui/icons-material/BuildRounded';
 import { useAppSelector } from '../../../Store/hooks';
 import { selectPermissions } from '../../../features/auth/authSelectors';
 import { SIDEBAR_WIDTH, SIDEBAR_COLLAPSED_WIDTH, HEADER_HEIGHT, PERMISSIONS } from '../../../utils/constants';
@@ -32,8 +30,6 @@ const MENU_ITEMS: SidebarItem[] = [
   { id: 'dashboard', label: 'Dashboard', path: '/dashboard', icon: <DashboardRoundedIcon />, permission: PERMISSIONS.DASHBOARD_VIEW },
   { id: 'staff', label: 'Staff', path: '/staff', icon: <BadgeRoundedIcon />, permission: PERMISSIONS.STAFF_VIEW },
   { id: 'inventory', label: 'Inventory', path: '/inventory', icon: <Inventory2RoundedIcon />, permission: PERMISSIONS.INVENTORY_VIEW },
-  { id: 'users', label: 'Users', path: '/users', icon: <PeopleRoundedIcon />, permission: PERMISSIONS.USER_VIEW },
-  { id: 'maintenance', label: 'Maintenance', path: '/maintenance', icon: <BuildRoundedIcon />, permission: PERMISSIONS.MAINTENANCE_VIEW },
 ];
 
 interface SidebarProps {

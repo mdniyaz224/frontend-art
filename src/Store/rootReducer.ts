@@ -3,8 +3,6 @@ import authReducer from '../features/auth/authSlice';
 import staffReducer from '../features/staff/staffSlice';
 import attendanceReducer from '../features/attendance/attendanceSlice';
 import inventoryReducer from '../features/inventory/inventorySlice';
-import userReducer from '../features/users/userSlice';
-import maintenanceReducer from '../features/maintenanceLogs/maintenanceLogsSlice';
 import salesReducer from '../features/sales/salesSlice';
 
 const rootReducer = combineReducers({
@@ -12,9 +10,6 @@ const rootReducer = combineReducers({
   staff: staffReducer,
   attendance: attendanceReducer,
   inventory: inventoryReducer,
-
-  maintenances: maintenanceReducer,
-  users: userReducer,
   sales: salesReducer,
 });
 
