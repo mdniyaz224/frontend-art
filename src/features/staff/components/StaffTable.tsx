@@ -1,7 +1,3 @@
-// ============================================================
-// StaffTable — Business-specific Table Configuration
-// ============================================================
-
 import React, { useCallback } from 'react';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import BlockRoundedIcon from '@mui/icons-material/BlockRounded';
@@ -48,8 +44,7 @@ const StaffTable: React.FC<StaffTableProps> = ({
   onRetry,
 }) => {
   const canEdit = usePermission(PERMISSIONS.STAFF_EDIT);
-  // STAFF_DELETE gates activate/deactivate, not a real delete — staff are
-  // soft-archived only, there's no hard-delete endpoint (see staffApi.ts).
+
   const canManageStatus = usePermission(PERMISSIONS.STAFF_DELETE);
 
   const columns: DataTableColumn<Staff>[] = [

@@ -1,11 +1,3 @@
-// ============================================================
-// ImageDropzone — drag-and-drop / click-to-browse image upload
-// ============================================================
-// Shared by the Staff and Inventory Add/Edit drawers. Uploads immediately
-// on selection via POST /api/v1/uploads/image and reports back the
-// resulting URL — callers just bind `value`/`onChange` to their existing
-// profilePicture/image form field, same as the old paste-a-URL flow.
-
 import React, { useCallback, useRef, useState } from 'react';
 import { Avatar, Box, CircularProgress, Link, Typography } from '@mui/material';
 import ImageRoundedIcon from '@mui/icons-material/ImageRounded';
@@ -13,7 +5,7 @@ import { uploadImage } from '../../../services/uploadApi';
 import { getApiErrorMessage } from '../../../utils/helpers';
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB — matches the backend's multer limit
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
 
 interface ImageDropzoneProps {
   value?: string;

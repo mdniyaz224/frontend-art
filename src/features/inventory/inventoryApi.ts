@@ -1,12 +1,3 @@
-// ============================================================
-// Inventory API Service
-// ============================================================
-// Matches be-boiler's src/routes/product.routes.ts and product.controller.ts
-// exactly: PATCH (not PUT) for updates, a real DELETE (hard delete — Product
-// already has Inactive/Draft states for soft-disable), dedicated
-// /categories and /status-summary endpoints, and a nested /:id/adjustments
-// sub-resource for auditable stock changes.
-
 import axiosInstance from '../../services/axios';
 import { API_ENDPOINTS } from '../../services/apiEndpoints';
 import type { ApiResponse } from '../../types/api';
@@ -68,6 +59,8 @@ export const createProduct = async (
   return response.data;
 };
 
+// No quantity field here — stock quantity only ever changes through
+// adjustStock below, so every change is auditable.
 export const updateProduct = async (
   id: string,
   data: ProductUpdateFormValues,

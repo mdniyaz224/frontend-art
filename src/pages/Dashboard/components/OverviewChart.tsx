@@ -1,11 +1,3 @@
-// ============================================================
-// OverviewChart — Sales vs. Revenue over time
-// ============================================================
-// Two series sharing one $-scale y-axis (never dual-axis — see the
-// dataviz skill's anti-patterns). Colors come from OVERVIEW_SERIES_COLORS
-// in dashboardPalette.ts, validated for line-vs-line contrast — do not
-// hardcode colors here.
-
 import React from 'react';
 import { Box, Button, Card, CardContent, Typography, ToggleButton, ToggleButtonGroup, Skeleton } from '@mui/material';
 import FileDownloadRoundedIcon from '@mui/icons-material/FileDownloadRounded';
@@ -26,7 +18,6 @@ const RANGE_OPTIONS: { label: string; value: OverviewRange }[] = [
   { label: 'Weekly', value: 'weekly' },
 ];
 
-/** "$0"/"$5k" style compact axis ticks. */
 const formatAxisTick = (v: number): string => (v >= 1000 ? `$${Math.round(v / 1000)}k` : `$${v}`);
 
 interface OverviewChartProps {

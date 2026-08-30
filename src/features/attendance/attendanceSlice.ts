@@ -1,7 +1,3 @@
-// ============================================================
-// Attendance Redux Slice
-// ============================================================
-
 import { createSlice } from '@reduxjs/toolkit';
 import type { AttendanceState } from './attendanceTypes';
 import { attendanceKey } from './attendanceTypes';

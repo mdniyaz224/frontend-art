@@ -1,11 +1,3 @@
-// ============================================================
-// AdjustStockDialog — the only way to change a product's quantity
-// ============================================================
-// Not in the Figma — a necessary, disclosed addition. be-boiler's
-// updateProductSchema never accepts a quantity key; every stock change
-// must go through POST /:id/adjustments with a reason, so this dialog is
-// the sole UI entry point for quantity changes.
-
 import React, { useState } from 'react';
 import {
   Dialog,

@@ -1,7 +1,3 @@
-// ============================================================
-// Auth API Service
-// ============================================================
-
 import axiosInstance from '../../services/axios';
 import { API_ENDPOINTS } from '../../services/apiEndpoints';
 import type { ApiResponse } from '../../types/api';
@@ -17,6 +13,8 @@ export const logoutApi = async (): Promise<ApiResponse<null>> => {
   return response.data;
 };
 
+// The refresh token itself never travels over JS — it's an httpOnly cookie
+// the backend sets and reads, attached automatically via axios withCredentials.
 export const refreshTokenApi = async (): Promise<ApiResponse<RefreshTokenResponse>> => {
   const response = await axiosInstance.post<ApiResponse<RefreshTokenResponse>>(API_ENDPOINTS.AUTH.REFRESH_TOKEN);
   return response.data;

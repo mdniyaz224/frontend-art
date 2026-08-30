@@ -1,12 +1,3 @@
-// ============================================================
-// InventoryCategoryChart — product count per category
-// ============================================================
-// A single-series magnitude comparison, so it gets one sequential hue
-// (never a rainbow) rather than a categorical palette — categories here
-// are free-text and open-ended (Decision 5 of the Inventory plan), so
-// there is no fixed hue to assign per name. Horizontal bars keep
-// long/variable-length category names readable without rotated labels.
-
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';

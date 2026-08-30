@@ -1,7 +1,3 @@
-// ============================================================
-// Inventory Redux Slice
-// ============================================================
-
 import { createSlice } from '@reduxjs/toolkit';
 import type { InventoryState } from './inventoryTypes';
 import { DEFAULT_PAGINATION } from '../../types/api';
@@ -47,7 +43,6 @@ const inventorySlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // ---- Fetch List ----
     builder
       .addCase(fetchProductList.pending, (state) => {
         state.loading = true;
@@ -56,8 +51,7 @@ const inventorySlice = createSlice({
       .addCase(fetchProductList.fulfilled, (state, action) => {
         state.loading = false;
         state.list = action.payload.products;
-        // Backend returns {page,limit,total,totalPages} — adapt to the
-        // generic PaginationMeta shape the shared DataTable expects.
+
         const { page, limit, total, totalPages } = action.payload.pagination;
         state.pagination = {
           page,
@@ -73,7 +67,6 @@ const inventorySlice = createSlice({
         state.error = (action.payload as string) || 'Failed to fetch products';
       });
 
-    // ---- Fetch By ID ----
     builder
       .addCase(fetchProductById.pending, (state) => {
         state.detailLoading = true;
@@ -88,7 +81,6 @@ const inventorySlice = createSlice({
         state.error = (action.payload as string) || 'Failed to fetch product';
       });
 
-    // ---- Create ----
     builder
       .addCase(createProductThunk.pending, (state) => {
         state.submitting = true;
@@ -102,7 +94,6 @@ const inventorySlice = createSlice({
         state.error = (action.payload as string) || 'Failed to create product';
       });
 
-    // ---- Update ----
     builder
       .addCase(updateProductThunk.pending, (state) => {
         state.submitting = true;
@@ -121,7 +112,6 @@ const inventorySlice = createSlice({
         state.error = (action.payload as string) || 'Failed to update product';
       });
 
-    // ---- Delete ----
     builder
       .addCase(deleteProductThunk.pending, (state) => {
         state.submitting = true;
@@ -139,17 +129,14 @@ const inventorySlice = createSlice({
         state.error = (action.payload as string) || 'Failed to delete product';
       });
 
-    // ---- Categories ----
     builder.addCase(fetchProductCategoriesThunk.fulfilled, (state, action) => {
       state.categories = action.payload;
     });
 
-    // ---- Status Counts ----
     builder.addCase(fetchProductStatusCountsThunk.fulfilled, (state, action) => {
       state.statusCounts = action.payload;
     });
 
-    // ---- Adjust Stock ----
     builder
       .addCase(adjustStockThunk.pending, (state) => {
         state.adjusting = true;
@@ -168,7 +155,6 @@ const inventorySlice = createSlice({
         state.error = (action.payload as string) || 'Failed to adjust stock';
       });
 
-    // ---- Fetch Stock Adjustments ----
     builder
       .addCase(fetchStockAdjustmentsThunk.pending, (state) => {
         state.adjustmentsLoading = true;

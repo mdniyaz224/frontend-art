@@ -1,16 +1,11 @@
-// ============================================================
-// User API Service
-// ============================================================
-
 import axiosInstance from '../../services/axios';
 import { API_ENDPOINTS } from '../../services/apiEndpoints';
 import type { ApiResponse, PaginatedResponse, ListQueryParams } from '../../types/api';
 import type { UserRecord, UserFormValues } from './userTypes';
 import { buildQueryParams } from '../../utils/helpers';
 
-// Only GET /users (admin-only, see be-boiler's user.routes.ts) exists on the backend today —
-// getUserById/createUser/updateUser/deleteUser below have no matching route; account
-// creation/edit/removal lives under /staff instead (see staff.service.ts on the backend).
+// Only GET /users exists on the backend today — create/update/delete below
+// have no matching route; account management lives under /staff instead.
 export const getUserList = async (params: ListQueryParams): Promise<PaginatedResponse<UserRecord>> => {
   const queryString = buildQueryParams(params as Record<string, unknown>);
   const response = await axiosInstance.get<PaginatedResponse<UserRecord>>(

@@ -1,9 +1,3 @@
-// ============================================================
-// FormikDatePicker — MUI DatePicker bound to a Formik field
-// ============================================================
-// Renders a static label above a plain (non-floating) date field, matching
-// the Add/Edit Staff design — not Material's default notched floating label.
-
 import React from 'react';
 import { useField } from 'formik';
 import { Box, Typography } from '@mui/material';

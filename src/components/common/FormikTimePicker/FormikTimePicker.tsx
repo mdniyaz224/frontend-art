@@ -1,11 +1,3 @@
-// ============================================================
-// FormikTimePicker — MUI TimePicker bound to a Formik field
-// ============================================================
-// Stores the value as a plain "HH:mm" 24-hour string, matching be-boiler's
-// shiftStart/shiftEnd validation (TIME_HHMM_REGEX in staff.validator.ts).
-// Renders a static label above a plain (non-floating) time field, matching
-// the Add/Edit Staff design — not Material's default notched floating label.
-
 import React from 'react';
 import { useField } from 'formik';
 import { Box, Typography } from '@mui/material';

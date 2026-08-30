@@ -1,7 +1,3 @@
-// ============================================================
-// Staff Selectors
-// ============================================================
-
 import type { RootState } from '../../Store/store';
 
 export const selectStaffList = (state: RootState) => state.staff.list;

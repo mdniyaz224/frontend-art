@@ -1,10 +1,3 @@
-// ============================================================
-// AttendanceTable — Attendance View Over the Staff List
-// ============================================================
-// There's no separate "attendance list" endpoint spanning staff — this
-// re-renders the same staff rows already loaded for the Staff tab with a
-// Date/Status column swapped in for Email/Phone/Salary.
-
 import React from 'react';
 import DataTable from '../../../components/common/DataTable/DataTable';
 import StaffNameCell from '../../staff/components/StaffNameCell';

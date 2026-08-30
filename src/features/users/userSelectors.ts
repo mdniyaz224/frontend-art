@@ -1,7 +1,3 @@
-// ============================================================
-// User Selectors
-// ============================================================
-
 import type { RootState } from '../../Store/store';
 
 export const selectUserList = (state: RootState) => state.users.list;

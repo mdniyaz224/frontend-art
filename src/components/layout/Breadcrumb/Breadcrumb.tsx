@@ -1,7 +1,3 @@
-// ============================================================
-// Breadcrumb — Navigation Breadcrumb
-// ============================================================
-
 import React from 'react';
 import { Breadcrumbs, Link, Typography } from '@mui/material';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';

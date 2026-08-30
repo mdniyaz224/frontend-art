@@ -1,7 +1,3 @@
-// ============================================================
-// StatusChip — Color-coded Status Indicator
-// ============================================================
-
 import React from 'react';
 import { Chip, type ChipProps } from '@mui/material';
 

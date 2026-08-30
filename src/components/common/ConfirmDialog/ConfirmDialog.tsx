@@ -1,7 +1,3 @@
-// ============================================================
-// ConfirmDialog — Reusable Confirmation Dialog
-// ============================================================
-
 import React from 'react';
 import {
   Dialog,

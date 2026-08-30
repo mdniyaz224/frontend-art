@@ -1,7 +1,3 @@
-// ============================================================
-// User Thunks
-// ============================================================
-
 import { createApiThunk } from '../../utils/createApiThunk';
 import { getUserList, getUserById } from './userApi';
 import type { UserRecord } from './userTypes';

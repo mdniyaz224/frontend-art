@@ -1,21 +1,7 @@
-// ============================================================
-// Dashboard Chart Palette
-// ============================================================
-// Validated against this app's actual dark chart surface (~#0f172a, the
-// composited MUI paper color — the app has no light mode) using the
-// dataviz skill's validator: `node scripts/validate_palette.js
-// "#3987e5,#d95926,#199e70" --mode dark --surface "#0f172a" --pairs all`
-// → ALL CHECKS PASS (worst all-pairs CVD ΔE 9.4, normal-vision ΔE 20.9,
-// all ≥3:1 contrast). Never reorder these three or add a 4th categorical
-// slot without re-running the validator — see the skill's color-formula.md.
-
-/** Fixed 3-slot categorical order — identity encoding, never reassigned by filters. */
 export const CATEGORICAL_SEQUENCE = ['#3987e5', '#d95926', '#199e70'] as const;
 
-/** Single sequential hue for magnitude (count-per-category bar chart). */
 export const SEQUENTIAL_HUE = '#3987e5';
 
-/** Fixed status palette — reserved for state, never reused as a categorical series. */
 export const STATUS_COLORS = {
   good: '#0ca30c',
   warning: '#fab219',
@@ -50,18 +36,6 @@ export const tooltipItemStyle = {
   color: CHART_INK.secondary,
 } as const;
 
-/** Two-line series pair for the Overview (Sales vs. Revenue) chart — a
- * separate slot from CATEGORICAL_SEQUENCE because it's validated for
- * line-vs-line contrast at thin (~2px) stroke widths, not pie/bar fills.
- * A literal gray "Revenue" line (the mockup's original look) fails the
- * validator's chroma floor (reads as ink, not a data color) and its CVD
- * separation from pink drops to ΔE 5.4 — this app's own theme.secondary
- * main (violet) is the nearest passing substitute and doubles as brand
- * consistency. Validated with the dataviz skill's validator:
- * `node scripts/validate_palette.js "#ec4899,#8b5cf6" --mode dark --surface "#0f172a" --pairs all`
- * → ALL CHECKS PASS (worst all-pairs CVD ΔE 15.4 protan, normal-vision ΔE 22.6,
- * both >=3:1 contrast). Never swap in an ungraded gray for `revenue`.
- */
 export const OVERVIEW_SERIES_COLORS = {
   sales: '#ec4899',
   revenue: '#8b5cf6',

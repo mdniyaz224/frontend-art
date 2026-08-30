@@ -1,7 +1,3 @@
-// ============================================================
-// Sales / Dashboard Analytics Thunks
-// ============================================================
-
 import { createApiThunk } from '../../utils/createApiThunk';
 import {
   getDashboardSummary,

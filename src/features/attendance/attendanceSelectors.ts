@@ -1,7 +1,3 @@
-// ============================================================
-// Attendance Selectors
-// ============================================================
-
 import type { RootState } from '../../Store/store';
 import { attendanceKey } from './attendanceTypes';
 

@@ -1,13 +1,3 @@
-// ============================================================
-// Dashboard Page
-// ============================================================
-// Every number and chart here is derived from real Staff/Inventory API
-// data (fetched via the same thunks the Staff and Inventory pages use) —
-// the original boilerplate's hardcoded stats, activity feed, and "vs last
-// month" deltas had nothing behind them and are gone. Widgets are
-// permission-gated the same way the sidebar is: a cashier (no STAFF_VIEW)
-// never triggers GET /staff and never sees staff-derived cards.
-
 import React, { useEffect, useMemo } from 'react';
 import { Box, Grid, Card, CardContent, Typography } from '@mui/material';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
@@ -54,9 +44,6 @@ import {
 import type { OverviewRange } from '../../features/sales/salesTypes';
 import { formatCompactCurrency, formatCurrency, formatDate } from '../../utils/formatters';
 
-/** Backend caps list endpoints at 100 per page (see product/staff validators) —
- * plenty for a small-team ERP's breakdown charts without adding new backend
- * aggregation endpoints just for the dashboard. */
 const AGGREGATE_PAGE_SIZE = 100;
 
 const DashboardPage: React.FC = () => {
@@ -97,8 +84,6 @@ const DashboardPage: React.FC = () => {
     }
   }, [dispatch, canViewInventory]);
 
-  // Restaurant-wide sales analytics — available to all three roles (all
-  // carry DASHBOARD_VIEW), unlike the Staff/Inventory sections below.
   useEffect(() => {
     dispatch(fetchDashboardSummary());
   }, [dispatch]);
@@ -181,7 +166,7 @@ const DashboardPage: React.FC = () => {
         }
       />
 
-      {/* Restaurant-wide sales analytics — unconditional, all roles see it */}
+      {}
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid item xs={12} sm={6} lg={4}>
           <SparklineStatCard

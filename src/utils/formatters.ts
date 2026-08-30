@@ -1,27 +1,14 @@
-// ============================================================
-// Formatting Utilities
-// ============================================================
-
 import dayjs from 'dayjs';
 
-/**
- * Format a date string or Date to a readable format.
- */
 export const formatDate = (date: string | Date | null | undefined, format = 'MMM DD, YYYY'): string => {
   if (!date) return '—';
   return dayjs(date).format(format);
 };
 
-/**
- * Format a date with time.
- */
 export const formatDateTime = (date: string | Date | null | undefined): string => {
   return formatDate(date, 'MMM DD, YYYY HH:mm');
 };
 
-/**
- * Format a number as currency.
- */
 export const formatCurrency = (
   amount: number | null | undefined,
   currency = 'USD',
@@ -35,11 +22,6 @@ export const formatCurrency = (
   }).format(amount);
 };
 
-/**
- * Format a number as compact currency for headline stat tiles, e.g.
- * 2000 -> "$2K", 55000 -> "$55K". Use `formatCurrency` everywhere a precise
- * amount matters (line items, exports); this is for glanceable big numbers.
- */
 export const formatCompactCurrency = (
   amount: number | null | undefined,
   currency = 'USD',
@@ -54,9 +36,6 @@ export const formatCompactCurrency = (
   }).format(amount);
 };
 
-/**
- * Format a number with thousands separators.
- */
 export const formatNumber = (
   value: number | null | undefined,
   locale = 'en-US',
@@ -65,26 +44,16 @@ export const formatNumber = (
   return new Intl.NumberFormat(locale).format(value);
 };
 
-/**
- * Truncate a string to a maximum length.
- */
 export const truncate = (str: string, maxLength = 50): string => {
   if (str.length <= maxLength) return str;
   return `${str.slice(0, maxLength)}…`;
 };
 
-/**
- * Capitalize the first letter of a string.
- */
 export const capitalize = (str: string): string => {
   if (!str) return '';
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
 
-/**
- * Convert a status enum value to a display label.
- * e.g., "IN_MAINTENANCE" → "In Maintenance"
- */
 export const statusToLabel = (status: string): string => {
   return status
     .split('_')
@@ -92,14 +61,6 @@ export const statusToLabel = (status: string): string => {
     .join(' ');
 };
 
-/**
- * Format a 24-hour "HH:mm" shift time compactly, e.g. "09:00" → "9am",
- * "13:30" → "1:30pm". Minutes are dropped when they're zero.
- *
- * Not every User record has shift times set (e.g. the bootstrap admin
- * created by `seed:admin` bypasses the staff-creation validator that
- * normally requires them), so this tolerates a missing/malformed value.
- */
 export const formatShiftTime = (time: string | null | undefined): string => {
   if (!time || !time.includes(':')) return '—';
   const [hourStr, minuteStr] = time.split(':');
@@ -119,13 +80,8 @@ export const formatShiftRange = (
   return `${formatShiftTime(start)} to ${formatShiftTime(end)}`;
 };
 
-/**
- * be-boiler's staff IDs are Mongo ObjectIds, not a sequential number — this
- * derives a short, table-friendly display id from the tail of the real id.
- */
 export const shortId = (id: string): string => `#${id.slice(-4).toUpperCase()}`;
 
-/** First + last initial (or first two letters of a single-word name), uppercased. */
 export const getInitials = (name: string): string => {
   const parts = name.trim().split(/\s+/);
   const initials = parts.length > 1 ? `${parts[0][0]}${parts[parts.length - 1][0]}` : parts[0].slice(0, 2);

@@ -1,7 +1,3 @@
-// ============================================================
-// FormSelect — MUI Select with React Hook Form Controller
-// ============================================================
-
 import React from 'react';
 import { Controller, type Control, type FieldValues, type Path } from 'react-hook-form';
 import { TextField, MenuItem } from '@mui/material';

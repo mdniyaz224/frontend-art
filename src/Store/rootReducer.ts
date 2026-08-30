@@ -1,7 +1,3 @@
-// ============================================================
-// Root Reducer — combines all feature slices
-// ============================================================
-
 import { combineReducers } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 import staffReducer from '../features/staff/staffSlice';
@@ -16,8 +12,7 @@ const rootReducer = combineReducers({
   staff: staffReducer,
   attendance: attendanceReducer,
   inventory: inventoryReducer,
-  // Key is `maintenances`, not `maintenanceLogs` — matches the feature's
-  // own selectors (maintenanceLogsSelectors.ts), which read state.maintenances.
+
   maintenances: maintenanceReducer,
   users: userReducer,
   sales: salesReducer,

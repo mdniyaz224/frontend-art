@@ -1,10 +1,3 @@
-// ============================================================
-// InventoryNameCell — Thumbnail + Name + Stock Subtitle
-// ============================================================
-// The subtitle recolors amber (low stock) or red (out of stock) instead of
-// adding a new badge element — keeps the Figma layout unchanged while still
-// surfacing the low-stock signal (be-boiler's isLowStock/isInStock virtuals).
-
 import React from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
 import RestaurantRoundedIcon from '@mui/icons-material/RestaurantRounded';

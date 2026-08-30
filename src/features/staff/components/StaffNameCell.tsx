@@ -1,7 +1,3 @@
-// ============================================================
-// StaffNameCell — Avatar + Name + Role, shared by Staff & Attendance tables
-// ============================================================
-
 import React from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
 import { getInitials, capitalize } from '../../../utils/formatters';

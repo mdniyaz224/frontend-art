@@ -1,7 +1,3 @@
-// ============================================================
-// Staff Redux Slice
-// ============================================================
-
 import { createSlice } from '@reduxjs/toolkit';
 import type { StaffState } from './staffTypes';
 import { DEFAULT_PAGINATION } from '../../types/api';
@@ -36,7 +32,6 @@ const staffSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // ---- Fetch List ----
     builder
       .addCase(fetchStaffList.pending, (state) => {
         state.loading = true;
@@ -45,8 +40,7 @@ const staffSlice = createSlice({
       .addCase(fetchStaffList.fulfilled, (state, action) => {
         state.loading = false;
         state.list = action.payload.staff;
-        // Backend returns {page,limit,total,totalPages} — adapt to the
-        // generic PaginationMeta shape the shared DataTable expects.
+
         const { page, limit, total, totalPages } = action.payload.pagination;
         state.pagination = {
           page,
@@ -62,7 +56,6 @@ const staffSlice = createSlice({
         state.error = (action.payload as string) || 'Failed to fetch staff';
       });
 
-    // ---- Fetch By ID ----
     builder
       .addCase(fetchStaffById.pending, (state) => {
         state.detailLoading = true;
@@ -77,7 +70,6 @@ const staffSlice = createSlice({
         state.error = (action.payload as string) || 'Failed to fetch staff member';
       });
 
-    // ---- Create ----
     builder
       .addCase(createStaffThunk.pending, (state) => {
         state.submitting = true;
@@ -91,7 +83,6 @@ const staffSlice = createSlice({
         state.error = (action.payload as string) || 'Failed to create staff member';
       });
 
-    // ---- Update ----
     builder
       .addCase(updateStaffThunk.pending, (state) => {
         state.submitting = true;
@@ -110,7 +101,6 @@ const staffSlice = createSlice({
         state.error = (action.payload as string) || 'Failed to update staff member';
       });
 
-    // ---- Toggle Active ----
     builder
       .addCase(toggleStaffActiveThunk.pending, (state) => {
         state.submitting = true;
@@ -129,7 +119,6 @@ const staffSlice = createSlice({
         state.error = (action.payload as string) || 'Failed to update staff status';
       });
 
-    // ---- Assign Role ----
     builder
       .addCase(assignStaffRoleThunk.pending, (state) => {
         state.submitting = true;

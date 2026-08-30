@@ -1,7 +1,3 @@
-// ============================================================
-// MainLayout — App Shell with Sidebar + Header + Content
-// ============================================================
-
 import React, { useState, useCallback } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
@@ -14,11 +10,8 @@ const MainLayout: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Desktop: collapses the permanent drawer to a mini-width rail.
   const [desktopOpen, setDesktopOpen] = useState(true);
-  // Mobile: shows/hides the temporary (modal) drawer — must default to
-  // closed, since an "open" modal drawer aria-hides the rest of the app
-  // even while it's CSS-hidden on larger viewports.
+
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleToggleSidebar = useCallback(() => {

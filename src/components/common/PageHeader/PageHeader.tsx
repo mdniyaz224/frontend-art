@@ -1,7 +1,3 @@
-// ============================================================
-// PageHeader — Page Title, Breadcrumb & Actions
-// ============================================================
-
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import type { BreadcrumbItem } from '../../../types/common';

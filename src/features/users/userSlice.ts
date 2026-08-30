@@ -1,7 +1,3 @@
-// ============================================================
-// User Redux Slice
-// ============================================================
-
 import { createSlice } from '@reduxjs/toolkit';
 import type { UserState } from './userTypes';
 import { DEFAULT_PAGINATION } from '../../types/api';

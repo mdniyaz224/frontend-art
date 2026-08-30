@@ -1,7 +1,3 @@
-// ============================================================
-// MUI Theme Configuration — Dark Enterprise Theme
-// ============================================================
-
 import { createTheme } from '@mui/material/styles';
 import { typography } from './typography';
 import { componentOverrides } from './components';
@@ -42,8 +38,8 @@ const theme = createTheme({
       dark: '#059669',
     },
     background: {
-      default: '#070b14', // Deeper space background
-      paper: 'rgba(15, 23, 42, 0.65)', // Glassmorphic paper base
+      default: '#070b14',
+      paper: 'rgba(15, 23, 42, 0.65)',
     },
     text: {
       primary: '#f8fafc',

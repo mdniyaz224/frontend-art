@@ -1,7 +1,3 @@
-// ============================================================
-// Staff Thunks
-// ============================================================
-
 import { createApiThunk } from '../../utils/createApiThunk';
 import {
   getStaffList,
@@ -17,9 +13,6 @@ import {
 import type { Staff, StaffCreateFormValues, StaffUpdateFormValues } from './staffTypes';
 import type { StaffRole } from '../../types/common';
 
-/**
- * Fetch paginated staff list.
- */
 export const fetchStaffList = createApiThunk<StaffListData, StaffListParams>(
   'staff/fetchList',
   async (params) => {
@@ -28,17 +21,11 @@ export const fetchStaffList = createApiThunk<StaffListData, StaffListParams>(
   },
 );
 
-/**
- * Fetch a single staff member by ID.
- */
 export const fetchStaffById = createApiThunk<Staff, string>('staff/fetchById', async (id) => {
   const response = await getStaffById(id);
   return response.data.staff;
 });
 
-/**
- * Create a new staff member.
- */
 export const createStaffThunk = createApiThunk<Staff, StaffCreateFormValues>(
   'staff/create',
   async (data) => {
@@ -47,9 +34,6 @@ export const createStaffThunk = createApiThunk<Staff, StaffCreateFormValues>(
   },
 );
 
-/**
- * Update an existing staff member's profile fields.
- */
 export const updateStaffThunk = createApiThunk<Staff, { id: string; data: StaffUpdateFormValues }>(
   'staff/update',
   async ({ id, data }) => {
@@ -58,9 +42,6 @@ export const updateStaffThunk = createApiThunk<Staff, { id: string; data: StaffU
   },
 );
 
-/**
- * Toggle a staff member's active status (soft archive / restore).
- */
 export const toggleStaffActiveThunk = createApiThunk<Staff, { id: string; isActive: boolean }>(
   'staff/toggleActive',
   async ({ id, isActive }) => {
@@ -69,9 +50,6 @@ export const toggleStaffActiveThunk = createApiThunk<Staff, { id: string; isActi
   },
 );
 
-/**
- * Reassign a staff member's role.
- */
 export const assignStaffRoleThunk = createApiThunk<Staff, { id: string; role: StaffRole }>(
   'staff/assignRole',
   async ({ id, role }) => {

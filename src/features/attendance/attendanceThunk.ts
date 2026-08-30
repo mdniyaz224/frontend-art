@@ -1,7 +1,3 @@
-// ============================================================
-// Attendance Thunks
-// ============================================================
-
 import { createApiThunk } from '../../utils/createApiThunk';
 import { markAttendance as markAttendanceApi, getAttendanceForDate } from './attendanceApi';
 import type { AttendanceStatus } from './attendanceTypes';

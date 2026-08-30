@@ -1,7 +1,3 @@
-// ============================================================
-// AppRoutes — Application Route Renderer
-// ============================================================
-
 import React, { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from '../components/layout/MainLayout/MainLayout';
@@ -15,10 +11,10 @@ const AppRoutes: React.FC = () => {
   return (
     <Suspense fallback={<LoadingOverlay fullScreen message="Loading page..." />}>
       <Routes>
-        {/* Public routes */}
+        {}
         <Route path="/login" element={<LoginPage />} />
 
-        {/* Protected routes — wrapped in MainLayout */}
+        {}
         <Route
           element={
             <ProtectedRoute>
@@ -40,7 +36,7 @@ const AppRoutes: React.FC = () => {
           })}
         </Route>
 
-        {/* Catch-all redirect */}
+        {}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>

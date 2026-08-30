@@ -1,7 +1,3 @@
-// ============================================================
-// App.tsx — Root Application Component
-// ============================================================
-
 import React, { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -14,12 +10,8 @@ import { getCurrentUser } from './features/auth/authThunk';
 import { setInitialized } from './features/auth/authSlice';
 import { getAccessToken } from './services/interceptors';
 
-// Setup Axios interceptors once at app startup
 setupInterceptors();
 
-/**
- * AuthInitializer — restores session from stored token on app load.
- */
 const AuthInitializer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
     const token = getAccessToken();

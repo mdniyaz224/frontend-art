@@ -1,10 +1,3 @@
-// ============================================================
-// Staff Types
-// ============================================================
-// Mirrors be-boiler's User model + staff validators exactly
-// (src/models/user.model.ts, src/validators/staff.validator.ts) —
-// staff members ARE users; there is no separate staff collection.
-
 import type { BaseEntity, StaffRole } from '../../types/common';
 
 export interface Staff extends BaseEntity {
@@ -12,14 +5,14 @@ export interface Staff extends BaseEntity {
   email: string;
   role: StaffRole;
   isActive: boolean;
-  // These are required by createStaffSchema for anyone created through
-  // POST /staff, but the User schema itself doesn't enforce them — the
-  // seed:admin bootstrap script creates a User without any of these, so
-  // they must be treated as optional wherever a Staff row is rendered.
+
+  // Required by the create form, but not by the backend User schema — the
+  // seed:admin bootstrap script creates a user without these, so treat them
+  // as optional wherever a Staff row gets rendered.
   phone?: string;
   salary?: number;
   dateOfBirth?: string;
-  /** Mongoose virtual derived from dateOfBirth — absent when dateOfBirth is unset. */
+
   age?: number;
   shiftStart?: string;
   shiftEnd?: string;
@@ -28,7 +21,6 @@ export interface Staff extends BaseEntity {
   profilePicture?: string;
 }
 
-/** Fields accepted by POST /staff (createStaffSchema). */
 export interface StaffCreateFormValues {
   name: string;
   email: string;
@@ -44,7 +36,6 @@ export interface StaffCreateFormValues {
   profilePicture?: string;
 }
 
-/** Fields accepted by PATCH /staff/:id (updateStaffSchema) — no password or role. */
 export interface StaffUpdateFormValues {
   name: string;
   email: string;
@@ -58,7 +49,6 @@ export interface StaffUpdateFormValues {
   profilePicture?: string;
 }
 
-/** Raw pagination shape returned by GET /staff (listStaff service). */
 export interface StaffApiPagination {
   page: number;
   limit: number;
@@ -89,5 +79,4 @@ export const STAFF_ROLE_OPTIONS: { label: string; value: StaffRole }[] = [
   { label: 'Cashier', value: 'cashier' },
 ];
 
-/** Matches STAFF_SORT_FIELDS in be-boiler's staff.validator.ts. */
 export const STAFF_SORT_FIELDS = ['name', 'email', 'salary', 'dateOfBirth', 'createdAt'] as const;

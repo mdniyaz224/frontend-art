@@ -1,51 +1,32 @@
-// ============================================================
-// General Helper Utilities
-// ============================================================
-
 import type { AxiosError } from 'axios';
 import type { ApiError } from '../types/api';
 
-/**
- * Extract a human-readable error message from an Axios error.
- * Handles:
- * - Standard API error responses
- * - Validation error arrays
- * - Network errors
- * - Unknown errors
- */
 export const getApiErrorMessage = (error: unknown): string => {
-  // Axios error with a response from the server
   if (isAxiosError(error) && error.response?.data) {
     const data = error.response.data as Partial<ApiError> & {
       message?: string;
       details?: { path: string; message: string }[] | string[];
     };
 
-    // Validation errors — join all field messages
     if (data.errors && data.errors.length > 0) {
       return data.errors.map((e) => `${e.field}: ${e.message}`).join(', ');
     }
 
-    // be-boiler's error handler reports Zod/Mongoose validation issues under
-    // `details`, either as {path,message} pairs or plain message strings.
     if (data.details && data.details.length > 0) {
       return data.details
         .map((d) => (typeof d === 'string' ? d : `${d.path}: ${d.message}`))
         .join(', ');
     }
 
-    // Standard error message
     if (data.message) {
       return data.message;
     }
   }
 
-  // Network / timeout error
   if (isAxiosError(error) && !error.response) {
     return 'Network error. Please check your connection and try again.';
   }
 
-  // Generic JS Error
   if (error instanceof Error) {
     return error.message;
   }
@@ -53,17 +34,10 @@ export const getApiErrorMessage = (error: unknown): string => {
   return 'An unexpected error occurred. Please try again.';
 };
 
-/**
- * Type guard for AxiosError.
- */
 function isAxiosError(error: unknown): error is AxiosError {
   return typeof error === 'object' && error !== null && 'isAxiosError' in error;
 }
 
-/**
- * Generate query string parameters from an object.
- * Strips undefined/null values.
- */
 export const buildQueryParams = (params: Record<string, unknown>): string => {
   const searchParams = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
@@ -74,9 +48,6 @@ export const buildQueryParams = (params: Record<string, unknown>): string => {
   return searchParams.toString();
 };
 
-/**
- * Simple deep clone using structuredClone (modern browsers) or JSON fallback.
- */
 export const deepClone = <T>(obj: T): T => {
   if (typeof structuredClone === 'function') {
     return structuredClone(obj);
@@ -84,8 +55,5 @@ export const deepClone = <T>(obj: T): T => {
   return JSON.parse(JSON.stringify(obj));
 };
 
-/**
- * Delay utility for testing / dev purposes.
- */
 export const delay = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));

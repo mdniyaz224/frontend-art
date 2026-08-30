@@ -1,7 +1,3 @@
-// ============================================================
-// Auth Selectors
-// ============================================================
-
 import type { RootState } from '../../Store/store';
 
 export const selectCurrentUser = (state: RootState) => state.auth.user;

@@ -1,17 +1,3 @@
-// ============================================================
-// API Endpoints — Single Source of Truth
-// ============================================================
-// Every backend route the frontend calls is declared here exactly once,
-// mirroring be-boiler's route files 1:1. Feature API services (e.g.
-// staffApi.ts, inventoryApi.ts) import from this object instead of
-// hardcoding path strings, so a backend route rename only ever requires
-// updating this one file.
-//
-// Static routes are plain string literals; routes with path params are
-// functions that return the interpolated path. Nothing here performs a
-// request — these are paths only, consumed by axiosInstance calls in the
-// feature *Api.ts files.
-
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/auth/login',

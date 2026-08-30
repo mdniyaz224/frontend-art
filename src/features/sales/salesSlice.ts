@@ -1,7 +1,3 @@
-// ============================================================
-// Sales / Dashboard Analytics Redux Slice
-// ============================================================
-
 import { createSlice } from '@reduxjs/toolkit';
 import type { SalesState } from './salesTypes';
 import { fetchDashboardSummary, fetchPopularDishes, fetchOverview } from './salesThunk';
@@ -27,7 +23,6 @@ const salesSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // ---- Summary ----
     builder
       .addCase(fetchDashboardSummary.pending, (state) => {
         state.summaryLoading = true;
@@ -42,9 +37,6 @@ const salesSlice = createSlice({
         state.error = (action.payload as string) || 'Failed to fetch dashboard summary';
       });
 
-    // ---- Popular Dishes ----
-    // Keyed off the request's own sortBy — quantity/revenue calls are
-    // dispatched independently and must land in separate list slots.
     builder
       .addCase(fetchPopularDishes.pending, (state) => {
         state.popularLoading = true;
@@ -63,7 +55,6 @@ const salesSlice = createSlice({
         state.error = (action.payload as string) || 'Failed to fetch popular dishes';
       });
 
-    // ---- Overview ----
     builder
       .addCase(fetchOverview.pending, (state, action) => {
         state.overviewLoading = true;

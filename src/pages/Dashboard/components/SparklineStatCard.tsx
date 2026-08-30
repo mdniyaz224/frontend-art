@@ -1,12 +1,3 @@
-// ============================================================
-// SparklineStatCard — headline metric + trend strip
-// ============================================================
-// A deliberate sibling to StatCard, not an extension of it — StatCard's
-// visual language (top accent bar, radial glow, 56px rounded-square icon)
-// is a different design system from this one (small circular icon, bottom
-// bar-sparkline strip), and the four existing StatCard call sites (Total
-// Staff/Inventory/Low Stock/Out of Stock) stay untouched.
-
 import React from 'react';
 import { Box, Card, CardContent, Typography, Skeleton } from '@mui/material';
 import { BarChart, Bar, ResponsiveContainer } from 'recharts';

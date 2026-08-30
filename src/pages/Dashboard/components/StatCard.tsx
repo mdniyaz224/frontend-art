@@ -1,11 +1,3 @@
-// ============================================================
-// StatCard — Dashboard headline metric tile
-// ============================================================
-// A bare number is deliberately not paired with a fabricated "vs last
-// month" delta (the original boilerplate hardcoded +12%/-5% with nothing
-// real behind it) — every value here is read straight from Redux state
-// populated by real Staff/Inventory API calls.
-
 import React from 'react';
 import { Box, Card, CardContent, Typography, alpha, Skeleton } from '@mui/material';
 

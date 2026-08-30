@@ -1,9 +1,3 @@
-// ============================================================
-// Sales / Dashboard Analytics Types
-// ============================================================
-// Mirrors be-boiler's dashboard.service.ts + dashboard.validator.ts response
-// shapes exactly (GET /dashboard/summary, /popular-dishes, /overview).
-
 export interface SparklinePoint {
   label: string;
   value: number;

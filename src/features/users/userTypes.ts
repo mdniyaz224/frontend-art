@@ -1,14 +1,7 @@
-// ============================================================
-// User Types
-// ============================================================
-
 import type { BaseEntity, Permission } from '../../types/common';
 
 export type UserStatus = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
 
-// Generic firstName/lastName + role-object shape — does not match be-boiler's actual
-// User model (a single `name` string and a bare role string, see auth/authTypes.ts's
-// User interface). Reconcile this before wiring UsersPage up to the real API response.
 export interface UserRecord extends BaseEntity {
   email: string;
   firstName: string;

@@ -1,7 +1,3 @@
-// ============================================================
-// Header — Top Application Bar
-// ============================================================
-
 import React from 'react';
 import {
   AppBar,
@@ -70,7 +66,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar }) => {
           md: `${sidebarOpen ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH}px`,
         },
         height: HEADER_HEIGHT,
-        // Removed bgcolor so it falls back to the MuiAppBar glassmorphic override
+
         transition: 'width 0.25s ease, margin-left 0.25s ease',
       }}
     >
@@ -100,12 +96,12 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar }) => {
 
         <Box sx={{ flexGrow: 1 }} />
 
-        {/* Notifications */}
+        {}
         <Tooltip title="Notifications">
           <IconButton sx={{ mr: 1, color: 'text.secondary', transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}>
-            <Badge 
-              badgeContent={3} 
-              color="error" 
+            <Badge
+              badgeContent={3}
+              color="error"
               variant="dot"
               sx={{
                 '& .MuiBadge-badge': {
@@ -125,7 +121,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar }) => {
 
         <Divider orientation="vertical" flexItem sx={{ mx: 1.5, my: 1 }} />
 
-        {/* User Avatar + Menu */}
+        {}
         <Tooltip title="Account">
           <IconButton onClick={handleOpenMenu} sx={{ p: 0.5, transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}>
             <Avatar

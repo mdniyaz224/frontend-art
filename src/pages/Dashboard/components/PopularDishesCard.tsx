@@ -1,12 +1,3 @@
-// ============================================================
-// PopularDishesCard — top dishes list (by units sold or by revenue)
-// ============================================================
-// "See All" is rendered as a static label, not a link — there is no
-// dish/menu management page in this ERP yet to navigate to, and this
-// codebase's dashboard avoids fabricated affordances (see StatCard's and
-// NeedsAttentionList's own comments on not inventing data/behavior that
-// isn't real).
-
 import React from 'react';
 import { Avatar, Box, Card, CardContent, Chip, Skeleton, Typography } from '@mui/material';
 import RestaurantMenuRoundedIcon from '@mui/icons-material/RestaurantMenuRounded';

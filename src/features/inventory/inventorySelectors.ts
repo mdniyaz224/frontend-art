@@ -1,7 +1,3 @@
-// ============================================================
-// Inventory Selectors
-// ============================================================
-
 import type { RootState } from '../../Store/store';
 
 export const selectProductList = (state: RootState) => state.inventory.list;

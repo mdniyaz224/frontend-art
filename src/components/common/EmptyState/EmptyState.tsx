@@ -1,7 +1,3 @@
-// ============================================================
-// EmptyState — Placeholder for Empty Data
-// ============================================================
-
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';

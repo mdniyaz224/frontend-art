@@ -1,10 +1,3 @@
-// ============================================================
-// Inventory (Product) Types
-// ============================================================
-// Mirrors be-boiler's Product + StockAdjustment models and validators
-// exactly (src/models/product.model.ts, stockAdjustment.model.ts,
-// src/validators/product.validator.ts).
-
 import type { BaseEntity } from '../../types/common';
 
 export type ProductStatus = 'active' | 'inactive' | 'draft';
@@ -21,13 +14,11 @@ export interface Product extends BaseEntity {
   perishable: boolean;
   lowStockThreshold?: number;
   image?: string;
-  /** Mongoose virtuals — always present in API responses. */
+
   isInStock: boolean;
   isLowStock: boolean;
 }
 
-/** Fields accepted by POST /products (createProductSchema). Includes the
- * initial quantity — this is the only place quantity is ever set directly. */
 export interface ProductCreateFormValues {
   name: string;
   category: string;
@@ -40,8 +31,6 @@ export interface ProductCreateFormValues {
   image?: string;
 }
 
-/** Fields accepted by PATCH /products/:id (updateProductSchema) — no quantity
- * or SKU; quantity changes only ever go through POST /:id/adjustments. */
 export interface ProductUpdateFormValues {
   name: string;
   category: string;
@@ -71,7 +60,6 @@ export interface ProductStatusCounts {
   draft: number;
 }
 
-/** Raw pagination shape returned by GET /products and GET /:id/adjustments. */
 export interface InventoryApiPagination {
   page: number;
   limit: number;
@@ -88,8 +76,7 @@ export interface StockAdjustment {
   quantityBefore: number;
   quantityAfter: number;
   reason: string;
-  /** Populated by GET /:id/adjustments (stockAdjustment.service.ts) so the
-   * audit trail can show a name instead of a bare ObjectId. */
+
   adjustedBy: { id: string; name: string; email: string };
   createdAt: string;
   updatedAt: string;
@@ -139,5 +126,4 @@ export const PRODUCT_UNIT_OPTIONS: { label: string; value: ProductUnit }[] = [
   { label: 'Box', value: 'box' },
 ];
 
-/** Matches PRODUCT_SORT_FIELDS in be-boiler's product.validator.ts. */
 export const PRODUCT_SORT_FIELDS = ['name', 'price', 'quantity', 'category', 'createdAt'] as const;

@@ -1,7 +1,3 @@
-// ============================================================
-// Redux Store Configuration
-// ============================================================
-
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from './rootReducer';
 
@@ -10,8 +6,6 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Empty on purpose — no slice currently stores non-serializable
-        // values; add an entry here rather than disabling the check globally.
         ignoredActions: [],
         ignoredPaths: [],
       },

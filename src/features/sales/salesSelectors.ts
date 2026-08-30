@@ -1,7 +1,3 @@
-// ============================================================
-// Sales / Dashboard Analytics Selectors
-// ============================================================
-
 import type { RootState } from '../../Store/store';
 
 export const selectDashboardSummary = (state: RootState) => state.sales.summary;

@@ -1,12 +1,3 @@
-// ============================================================
-// Attendance API Service
-// ============================================================
-// Matches be-boiler's nested routes exactly:
-//   PUT /staff/:id/attendance/:date   { status } -> { attendance }
-//   GET /staff/:id/attendance         ?from&to&page&limit -> { attendance[], pagination }
-// There is no cross-staff attendance endpoint — every call is scoped to one
-// staff member, so the UI fetches per row.
-
 import axiosInstance from '../../services/axios';
 import { API_ENDPOINTS } from '../../services/apiEndpoints';
 import type { ApiResponse } from '../../types/api';
@@ -29,7 +20,8 @@ interface AttendanceListData {
   pagination: { page: number; limit: number; total: number; totalPages: number };
 }
 
-/** Fetches the single attendance record for one staff member on one date, if any. */
+// No cross-staff attendance endpoint exists — every call is scoped to one
+// staff member, so callers fetch this per row instead of in one batch.
 export const getAttendanceForDate = async (
   staffId: string,
   date: string,

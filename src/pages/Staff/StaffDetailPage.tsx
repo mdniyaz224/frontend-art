@@ -1,7 +1,3 @@
-// ============================================================
-// Staff Detail Page
-// ============================================================
-
 import React, { useEffect, useState } from 'react';
 import {
   Box,
@@ -57,8 +53,7 @@ const StaffDetailPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const canEdit = usePermission(PERMISSIONS.STAFF_EDIT);
-  // STAFF_DELETE gates activate/deactivate, not a real delete — staff are
-  // soft-archived only, there's no hard-delete endpoint (see staffApi.ts).
+
   const canManageStatus = usePermission(PERMISSIONS.STAFF_DELETE);
   const canManageRole = usePermission(PERMISSIONS.STAFF_MANAGE_ROLE);
 
@@ -107,7 +102,7 @@ const StaffDetailPage: React.FC = () => {
   return (
     <Box>
       <Grid container spacing={4}>
-        {/* Left column — Profile Image */}
+        {}
         <Grid item xs={12} md={4}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5 }}>
             Profile Image
@@ -149,7 +144,7 @@ const StaffDetailPage: React.FC = () => {
           )}
         </Grid>
 
-        {/* Right column — Personal + Job details */}
+        {}
         <Grid item xs={12} md={8}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5 }}>
             Employee Personal Details

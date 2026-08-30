@@ -1,10 +1,3 @@
-// ============================================================
-// AttendanceStatusCell — Per-row Attendance Marker
-// ============================================================
-// Unmarked row: four pastel status pills (matches the design's "pick one"
-// row). Marked row: a single solid dark pill showing the current status
-// with an edit pencil — clicking it re-opens the four options.
-
 import React, { useEffect, useState } from 'react';
 import { Box, Button, CircularProgress } from '@mui/material';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
@@ -33,9 +26,6 @@ const AttendanceStatusCell: React.FC<AttendanceStatusCellProps> = ({ staffId, da
     }
   }, [dispatch, staffId, date, entry]);
 
-  // Collapse back to the read view when the selected date changes —
-  // adjusting state during render instead of an effect avoids the extra
-  // cascading render.
   if (editingSyncedFor !== date) {
     setEditingSyncedFor(date);
     setEditing(false);

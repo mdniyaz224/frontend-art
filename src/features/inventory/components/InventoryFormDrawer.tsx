@@ -1,16 +1,3 @@
-// ============================================================
-// InventoryFormDrawer — Add / Edit Inventory Slide-in Panel
-// ============================================================
-// Quantity is read-only in edit mode: be-boiler's updateProductSchema never
-// accepts a quantity key — all stock changes go through the dedicated
-// "Adjust Stock" action (onRequestAdjustStock), which requires a reason and
-// is auditable. "Stock" (In Stock/Out of Stock) is always a computed
-// display derived from quantity, never a real stored field. Category is a
-// free-text Autocomplete (not a closed select) so admins can add a new
-// category without a code change. Unit and Low Stock Alert are additions
-// not present in the Figma — both map directly to Product model fields
-// (unit, lowStockThreshold) the backend needs regardless of the design.
-
 import React, { useEffect } from 'react';
 import {
   Drawer,
@@ -57,11 +44,11 @@ const baseShape = {
     .required('Price is required'),
   unit: yup
     .mixed<ProductUnit>()
-    .oneOf(['piece', 'kg', 'litre', 'dozen', 'box'])
+    .oneOf(PRODUCT_UNIT_OPTIONS.map((u) => u.value))
     .required('Unit is required'),
   status: yup
     .mixed<ProductStatus>()
-    .oneOf(['active', 'inactive', 'draft'])
+    .oneOf(PRODUCT_STATUS_OPTIONS.map((s) => s.value))
     .required('Status is required'),
   perishable: yup.boolean().required(),
   lowStockThreshold: yup
@@ -70,11 +57,7 @@ const baseShape = {
     .integer('Must be a whole number')
     .positive('Must be greater than 0')
     .optional(),
-  // Populated only by ImageDropzone's own upload flow now (not hand-typed),
-  // so no format validation here — yup's built-in .url() regex rejects
-  // perfectly valid bare-hostname URLs like http://localhost:5000/..., which
-  // would break every local dev environment. The backend still validates
-  // the format authoritatively (zod's url() there uses the URL constructor).
+
   image: yup.string().trim().optional(),
 };
 
@@ -164,10 +147,6 @@ const InventoryFormDrawer: React.FC<InventoryFormDrawerProps> = ({
     validationSchema: mode === 'create' ? createSchema : updateSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
-      // Both fields are optional on the backend — an empty string must be
-      // omitted, not sent as-is: z.coerce.number() on lowStockThreshold
-      // would coerce "" to 0 and then fail `.positive()`, and z.string().url()
-      // on image would reject "" as an invalid URL.
       const lowStockThreshold =
         values.lowStockThreshold === ('' as unknown as number) || values.lowStockThreshold == null
           ? undefined

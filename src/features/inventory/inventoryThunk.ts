@@ -1,7 +1,3 @@
-// ============================================================
-// Inventory Thunks
-// ============================================================
-
 import { createApiThunk } from '../../utils/createApiThunk';
 import {
   getProductList,

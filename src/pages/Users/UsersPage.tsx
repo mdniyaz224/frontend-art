@@ -1,7 +1,3 @@
-// ============================================================
-// Users Page — Stub
-// ============================================================
-
 import React from 'react';
 import { Box, Card, CardContent } from '@mui/material';
 import PageHeader from '../../components/common/PageHeader/PageHeader';

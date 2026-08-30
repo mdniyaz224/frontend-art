@@ -1,7 +1,3 @@
-// ============================================================
-// Maintenance Log Types
-// ============================================================
-
 export type MaintenanceLogStatus = 'open' | 'closed';
 
 export interface MaintenanceLog {

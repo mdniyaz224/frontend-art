@@ -1,7 +1,3 @@
-// ============================================================
-// Staff List Page — Staff Management + Attendance tabs
-// ============================================================
-
 import React, { useEffect, useCallback, useState } from 'react';
 import {
   Box,
@@ -38,7 +34,7 @@ import {
 import { fetchStaffList, toggleStaffActiveThunk } from '../../features/staff/staffThunk';
 import { usePermission } from '../../hooks/usePermission';
 import { useDebounce } from '../../hooks/useDebounce';
-import { PERMISSIONS } from '../../utils/constants';
+import { PERMISSIONS, SEARCH_DEBOUNCE_MS } from '../../utils/constants';
 import { staffAccentButtonSx } from '../../features/staff/staffAccent';
 import { usePageTitle } from '../../contexts/PageTitleContext';
 import { STAFF_ROLE_OPTIONS, type Staff } from '../../features/staff/staffTypes';
@@ -76,7 +72,7 @@ const StaffListPage: React.FC = () => {
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState<StaffRole | ''>('');
   const [includeInactive, setIncludeInactive] = useState(false);
-  const debouncedSearch = useDebounce(search, 400);
+  const debouncedSearch = useDebounce(search, SEARCH_DEBOUNCE_MS);
 
   const loadData = useCallback(
     (page = pagination.page) => {
@@ -95,11 +91,8 @@ const StaffListPage: React.FC = () => {
     [dispatch, pagination.page, pagination.pageSize, sort, debouncedSearch, roleFilter, includeInactive],
   );
 
-  // Search/role/includeInactive changes restart pagination at page 1 — the
-  // previously-selected page may no longer exist in the filtered result set.
   useEffect(() => {
     loadData(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, roleFilter, includeInactive, sort]);
 
   const handlePageChange = useCallback((page: number) => loadData(page), [loadData]);

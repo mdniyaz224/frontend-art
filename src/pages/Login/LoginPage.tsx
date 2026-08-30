@@ -1,7 +1,3 @@
-// ============================================================
-// Login Page
-// ============================================================
-
 import React from 'react';
 import {
   Box,
@@ -52,14 +48,12 @@ const LoginPage: React.FC = () => {
     },
   });
 
-  // Redirect if already authenticated
   React.useEffect(() => {
     if (isAuthenticated) {
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, navigate, from]);
 
-  // Clear error on unmount
   React.useEffect(() => {
     return () => {
       dispatch(clearAuthError());
@@ -110,7 +104,7 @@ const LoginPage: React.FC = () => {
         }}
       >
         <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
-          {/* Logo */}
+          {}
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4 }}>
             <Box
               sx={{
@@ -135,14 +129,14 @@ const LoginPage: React.FC = () => {
             </Typography>
           </Box>
 
-          {/* Error Alert */}
+          {}
           {error && (
             <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }} onClose={() => dispatch(clearAuthError())}>
               {error}
             </Alert>
           )}
 
-          {/* Login Form */}
+          {}
           <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
               <FormInput

@@ -1,7 +1,3 @@
-// ============================================================
-// DataTable — Generic Reusable Data Table
-// ============================================================
-
 import React, { useCallback, useMemo } from 'react';
 import {
   Table,
@@ -71,7 +67,7 @@ function DataTable<T extends { id: string }>({
 
   const handlePageChange = useCallback(
     (_: unknown, newPage: number) => {
-      if (onPageChange) onPageChange(newPage + 1); // MUI is 0-indexed, API is 1-indexed
+      if (onPageChange) onPageChange(newPage + 1); 
     },
     [onPageChange],
   );
@@ -98,8 +94,6 @@ function DataTable<T extends { id: string }>({
     return String(value);
   };
 
-  // Row virtualization: only the rows currently in the viewport are mounted,
-  // so large pages/pageSizes stay smooth to scroll.
   const virtuosoComponents: TableComponents<T> = useMemo(
     () => ({
       Scroller: React.forwardRef<HTMLDivElement>((props, ref) => (
@@ -136,12 +130,10 @@ function DataTable<T extends { id: string }>({
     [loading],
   );
 
-  // Error state
   if (error && !loading) {
     return <ErrorState message={error} onRetry={onRetry} />;
   }
 
-  // Loading skeleton
   if (loading && rows.length === 0) {
     return (
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -185,12 +177,10 @@ function DataTable<T extends { id: string }>({
     );
   }
 
-  // Empty state
   if (!loading && rows.length === 0) {
     return <EmptyState message={emptyMessage} icon={emptyIcon} />;
   }
 
-  // Serial numbers continue across pages rather than restarting at 1 on every page.
   const serialStart = pagination ? (pagination.page - 1) * pagination.pageSize : 0;
 
   return (
@@ -283,7 +273,7 @@ function DataTable<T extends { id: string }>({
         <TablePagination
           component="div"
           count={pagination.totalItems}
-          page={pagination.page - 1} // MUI is 0-indexed
+          page={pagination.page - 1} 
           rowsPerPage={pagination.pageSize}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleRowsPerPageChange}

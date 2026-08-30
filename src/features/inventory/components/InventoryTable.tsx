@@ -1,7 +1,3 @@
-// ============================================================
-// InventoryTable — Business-specific Table Configuration
-// ============================================================
-
 import React, { useCallback } from 'react';
 import { Box, Typography } from '@mui/material';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
@@ -57,7 +53,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
 }) => {
   const canEdit = usePermission(PERMISSIONS.INVENTORY_EDIT);
   const canDelete = usePermission(PERMISSIONS.INVENTORY_DELETE);
-  // Matches be-boiler's GET /:id/adjustments RBAC (ADMIN, MANAGER only).
+
   const canViewHistory = usePermission(PERMISSIONS.INVENTORY_ADJUST_STOCK);
 
   const columns: DataTableColumn<Product>[] = [

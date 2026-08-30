@@ -1,7 +1,3 @@
-// ============================================================
-// PermissionRoute — Requires Specific Permission
-// ============================================================
-
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';

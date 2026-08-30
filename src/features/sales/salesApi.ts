@@ -1,9 +1,3 @@
-// ============================================================
-// Sales / Dashboard Analytics API Service
-// ============================================================
-// Matches be-boiler's src/routes/dashboard.routes.ts — three read-only
-// GET endpoints, all ADMIN/MANAGER/CASHIER accessible.
-
 import axiosInstance from '../../services/axios';
 import { API_ENDPOINTS } from '../../services/apiEndpoints';
 import type { ApiResponse } from '../../types/api';

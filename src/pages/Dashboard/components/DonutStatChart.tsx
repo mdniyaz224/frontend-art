@@ -1,13 +1,3 @@
-// ============================================================
-// DonutStatChart — shared donut used by Staff-by-Role and
-// Product-by-Status
-// ============================================================
-// A single series needs no legend box per the dataviz skill, but these
-// charts always have >=2 slices, so a legend is always rendered alongside
-// direct value labels (n<=4 slices here, well under the "direct-label
-// everything" cutoff of 4). Identity is never color-alone: every slice is
-// named in both the legend and its own label.
-
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';

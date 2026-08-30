@@ -1,7 +1,3 @@
-// ============================================================
-// MUI Component Overrides
-// ============================================================
-
 import type { Components, Theme } from '@mui/material/styles';
 
 export const componentOverrides: Components<Theme> = {

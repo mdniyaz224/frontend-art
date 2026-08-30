@@ -1,10 +1,3 @@
-// ============================================================
-// StockAdjustmentHistoryDialog — Audit Trail for Stock Changes
-// ============================================================
-// Surfaces the immutable ledger written by POST /:id/adjustments
-// (stockAdjustment.service.ts) — who changed stock, when, by how much,
-// and why. Without this view the audit trail is recorded but invisible.
-
 import React, { useCallback, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Box, Button, Typography } from '@mui/material';
 import DataTable from '../../../components/common/DataTable/DataTable';
@@ -39,8 +32,6 @@ const StockAdjustmentHistoryDialog: React.FC<StockAdjustmentHistoryDialogProps> 
   const loading = useAppSelector(selectStockAdjustmentsLoading);
   const error = useAppSelector(selectProductError);
 
-  // Fire-and-forget dispatch — the slice's own pending/fulfilled/rejected
-  // cases drive `loading`/`error`, so no local state is set from this effect.
   const loadAdjustments = useCallback(
     (page = 1) => {
       if (!product) return;
@@ -53,7 +44,6 @@ const StockAdjustmentHistoryDialog: React.FC<StockAdjustmentHistoryDialogProps> 
     if (open && product) {
       loadAdjustments(1);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, product?.id]);
 
   const handleClose = () => {

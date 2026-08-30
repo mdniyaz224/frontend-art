@@ -1,12 +1,3 @@
-// ============================================================
-// Inventory List Page
-// ============================================================
-// Matches the Figma: total-count header + "Add New Inventory", a left
-// filter sidebar (Product Status counts, Category, Stock, Value/Unit,
-// Piece/Item/Quantity, Price range, Reset Filters), and the product list.
-// A search box above the list is a disclosed addition — the spec requires
-// server-side search but the Figma has no search control anywhere.
-
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   Box,
@@ -41,7 +32,7 @@ import {
 } from '../../features/inventory/inventoryThunk';
 import { usePermission } from '../../hooks/usePermission';
 import { useDebounce } from '../../hooks/useDebounce';
-import { PERMISSIONS } from '../../utils/constants';
+import { PERMISSIONS, SEARCH_DEBOUNCE_MS } from '../../utils/constants';
 import { pastelPinkButtonSx, PASTEL_PINK_ACCENT } from '../../theme/accents';
 import { usePageTitle } from '../../contexts/PageTitleContext';
 import { PRODUCT_UNIT_OPTIONS } from '../../features/inventory/inventoryTypes';
@@ -99,13 +90,10 @@ const InventoryListPage: React.FC = () => {
   const [adjustTarget, setAdjustTarget] = useState<Product | null>(null);
   const [historyTarget, setHistoryTarget] = useState<Product | null>(null);
 
-  // Derived live from `list` (not a stale snapshot) so that adjusting stock
-  // while the Edit drawer is open — which refreshes `list` — immediately
-  // reflects the new quantity instead of showing a stale value until reopened.
   const editingProduct =
     drawerState?.mode === 'edit' ? (list.find((p) => p.id === drawerState.productId) ?? null) : null;
 
-  const debouncedSearch = useDebounce(search, 400);
+  const debouncedSearch = useDebounce(search, SEARCH_DEBOUNCE_MS);
 
   const loadData = useCallback(
     (page = 1) => {
@@ -129,11 +117,8 @@ const InventoryListPage: React.FC = () => {
     [dispatch, pagination.pageSize, sortBy, sortOrder, debouncedSearch, filters],
   );
 
-  // Search/filter/sort changes restart pagination at page 1 — the
-  // previously-selected page may no longer exist in the filtered result set.
   useEffect(() => {
     loadData(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, filters, sortBy, sortOrder]);
 
   useEffect(() => {
@@ -197,7 +182,7 @@ const InventoryListPage: React.FC = () => {
       </Box>
 
       <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start' }}>
-        {/* Filter sidebar */}
+        {}
         <Box sx={{ width: 260, flexShrink: 0 }}>
           <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
             Product Status
@@ -361,7 +346,7 @@ const InventoryListPage: React.FC = () => {
           </Button>
         </Box>
 
-        {/* Product list */}
+        {}
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <TextField
             fullWidth

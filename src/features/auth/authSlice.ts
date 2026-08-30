@@ -1,7 +1,3 @@
-// ============================================================
-// Auth Redux Slice
-// ============================================================
-
 import { createSlice } from '@reduxjs/toolkit';
 import type { AuthState } from './authTypes';
 import { login, logout, getCurrentUser } from './authThunk';
@@ -29,7 +25,6 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // ---- Login ----
     builder
       .addCase(login.pending, (state) => {
         state.loading = true;
@@ -48,7 +43,6 @@ const authSlice = createSlice({
         state.error = (action.payload as string) || 'Login failed';
       });
 
-    // ---- Logout ----
     builder
       .addCase(logout.pending, (state) => {
         state.loading = true;
@@ -60,7 +54,6 @@ const authSlice = createSlice({
         return { ...initialState, initializing: false };
       });
 
-    // ---- Get Current User ----
     builder
       .addCase(getCurrentUser.pending, (state) => {
         state.initializing = true;

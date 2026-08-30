@@ -1,7 +1,3 @@
-// ============================================================
-// DatePicker — MUI DatePicker with React Hook Form Controller
-// ============================================================
-
 import React from 'react';
 import { Controller, type Control, type FieldValues, type Path } from 'react-hook-form';
 import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker';

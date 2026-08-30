@@ -1,10 +1,3 @@
-// ============================================================
-// QuickActionsCard — real, permission-gated navigation shortcuts
-// ============================================================
-// The original boilerplate's four actions ("Schedule Maintenance",
-// "Generate Report", ...) didn't navigate anywhere — this version only
-// lists actions that go to a real route the current role can access.
-
 import React from 'react';
 import { Box, Typography, alpha } from '@mui/material';
 import { useNavigate } from 'react-router-dom';

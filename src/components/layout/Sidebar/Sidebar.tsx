@@ -1,7 +1,3 @@
-// ============================================================
-// Sidebar — Collapsible Navigation Drawer
-// ============================================================
-
 import React, { useMemo } from 'react';
 import {
   Drawer,
@@ -70,7 +66,7 @@ const Sidebar: React.FC<SidebarProps> = ({ desktopOpen, mobileOpen, onMobileClos
         bgcolor: 'background.paper',
       }}
     >
-      {/* Logo / Brand */}
+      {}
       <Box
         sx={{
           height: HEADER_HEIGHT,
@@ -110,7 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({ desktopOpen, mobileOpen, onMobileClos
         )}
       </Box>
 
-      {/* Navigation */}
+      {}
       <Box sx={{ flex: 1, overflow: 'auto', py: 2, px: open ? 1.5 : 0.5 }}>
         <List component="nav" disablePadding>
           {visibleItems.map((item) => {
@@ -179,7 +175,7 @@ const Sidebar: React.FC<SidebarProps> = ({ desktopOpen, mobileOpen, onMobileClos
         </List>
       </Box>
 
-      {/* Footer */}
+      {}
       {open && (
         <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider' }}>
           <Typography variant="caption" sx={{ color: 'text.disabled' }}>
@@ -192,8 +188,7 @@ const Sidebar: React.FC<SidebarProps> = ({ desktopOpen, mobileOpen, onMobileClos
 
   return (
     <>
-      {/* Mobile drawer — always renders its expanded content; only its
-          visibility (via `open`) is toggled. */}
+      {}
       <Drawer
         variant="temporary"
         open={mobileOpen}
@@ -209,7 +204,7 @@ const Sidebar: React.FC<SidebarProps> = ({ desktopOpen, mobileOpen, onMobileClos
         {renderDrawerContent(true)}
       </Drawer>
 
-      {/* Desktop drawer */}
+      {}
       <Drawer
         variant="permanent"
         sx={{

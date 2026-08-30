@@ -1,10 +1,3 @@
-// ============================================================
-// StaffFormDrawer — Add / Edit Staff Slide-in Panel
-// ============================================================
-// Password and role are create-only: be-boiler's updateStaffSchema is
-// `.strict()` and rejects both, so edit submits a trimmed payload and role
-// changes go through the dedicated "Change Role" control on the detail page.
-
 import React from 'react';
 import { Drawer, Box, Typography, IconButton, Button, CircularProgress } from '@mui/material';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
@@ -67,14 +60,12 @@ const baseShape = {
     .required('Shift end timing is required'),
   address: yup.string().trim().max(250).optional(),
   additionalDetails: yup.string().trim().max(1000).optional(),
-  // Populated only by ImageDropzone's own upload flow now (not hand-typed),
-  // so no format validation here — yup's built-in .url() regex rejects
-  // perfectly valid bare-hostname URLs like http://localhost:5000/..., which
-  // would break every local dev environment. The backend still validates
-  // the format authoritatively (zod's url() there uses the URL constructor).
+  // No .url() here — yup's URL regex rejects bare-hostname URLs like
+  // http://localhost:5000/..., which every local dev environment uses.
   profilePicture: yup.string().trim().optional(),
 };
 
+// password and role are create-only — the update route rejects both fields.
 const createSchema = yup.object({
   ...baseShape,
   password: yup
@@ -87,7 +78,7 @@ const createSchema = yup.object({
     .required('Password is required'),
   role: yup
     .mixed<StaffCreateFormValues['role']>()
-    .oneOf(['admin', 'manager', 'cashier'])
+    .oneOf(STAFF_ROLE_OPTIONS.map((r) => r.value))
     .required('Role is required'),
 });
 
@@ -112,8 +103,7 @@ const StaffFormDrawer: React.FC<StaffFormDrawerProps> = ({ open, mode, staff, on
       name: staff?.name ?? '',
       email: staff?.email ?? '',
       password: '',
-      // Blank rather than defaulting to a real role/amount — the design
-      // shows "Select role" / "Enter Salary" placeholders on a fresh form.
+
       role: staff?.role ?? ('' as StaffCreateFormValues['role']),
       phone: staff?.phone ?? '',
       salary: staff?.salary ?? ('' as unknown as number),

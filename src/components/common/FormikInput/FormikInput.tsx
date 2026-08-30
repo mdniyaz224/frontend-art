@@ -1,9 +1,3 @@
-// ============================================================
-// FormikInput — MUI TextField bound to a Formik field
-// ============================================================
-// Renders a static label above a plain (non-floating) input, matching the
-// Add/Edit Staff design — not Material's default notched floating label.
-
 import React from 'react';
 import { useField } from 'formik';
 import { Box, TextField, Typography, type TextFieldProps } from '@mui/material';

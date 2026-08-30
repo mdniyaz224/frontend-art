@@ -1,7 +1,3 @@
-// ============================================================
-// LoadingOverlay — Full-area Loading Spinner
-// ============================================================
-
 import React from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 

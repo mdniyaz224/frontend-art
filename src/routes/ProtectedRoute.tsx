@@ -1,7 +1,3 @@
-// ============================================================
-// ProtectedRoute — Requires Authentication
-// ============================================================
-
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../Store/hooks';
@@ -17,7 +13,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const initializing = useAppSelector(selectAuthInitializing);
   const location = useLocation();
 
-  // Still checking auth status
   if (initializing) {
     return <LoadingOverlay fullScreen message="Initializing..." />;
   }

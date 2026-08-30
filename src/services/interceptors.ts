@@ -1,56 +1,19 @@
-// ============================================================
-// Axios Interceptors — Request & Response
-// ============================================================
-//
-// REQUEST INTERCEPTOR
-// - Attaches the Authorization header with the Bearer access token
-// - Skips if no token is present (public endpoints)
-//
-// RESPONSE INTERCEPTOR
-// - Handles global HTTP error statuses
-// - Implements refresh-token flow with request queuing
-//
-// REFRESH TOKEN FLOW
-// The backend never puts the refresh token in a JSON body — it is set as an
-// httpOnly cookie on /auth/login and read back from that same cookie on
-// /auth/refresh-token, so the browser (not this code) carries it. Only the
-// short-lived access token is kept in localStorage for the Authorization header.
-//
-// 1. A request returns 401 (access token expired)
-// 2. If no refresh is in progress, start one:
-//    a. Set isRefreshing = true
-//    b. Call POST /auth/refresh-token (cookie sent automatically via withCredentials)
-//    c. Store the new access token
-//    d. Retry the original request
-//    e. Process the queued requests
-// 3. If a refresh IS already in progress, queue the failed request
-//    and return a Promise that resolves/rejects when the refresh completes.
-// 4. If the refresh itself fails:
-//    a. Reject all queued requests
-//    b. Clear the stored access token
-//    c. Redirect to login
-
 import axiosInstance from './axios';
 import { API_ENDPOINTS } from './apiEndpoints';
 import type { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 import type { ApiResponse } from '../types/api';
 import type { RefreshTokenResponse } from '../features/auth/authTypes';
+import { STORAGE_KEYS } from '../utils/constants';
 
-// ----- Token helpers -----
-
-const TOKEN_KEY = 'erp_access_token';
-
-export const getAccessToken = (): string | null => localStorage.getItem(TOKEN_KEY);
+export const getAccessToken = (): string | null => localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
 
 export const setAccessToken = (accessToken: string): void => {
-  localStorage.setItem(TOKEN_KEY, accessToken);
+  localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
 };
 
 export const clearAccessToken = (): void => {
-  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
 };
-
-// ----- Refresh-token queue -----
 
 type QueueItem = {
   resolve: (token: string) => void;
@@ -71,10 +34,7 @@ const processQueue = (error: unknown, token: string | null = null): void => {
   failedQueue = [];
 };
 
-// ----- Setup function — called once at app startup -----
-
 export const setupInterceptors = (): void => {
-  // ==================== REQUEST INTERCEPTOR ====================
   axiosInstance.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
       const token = getAccessToken();
@@ -86,37 +46,29 @@ export const setupInterceptors = (): void => {
     (error) => Promise.reject(error),
   );
 
-  // ==================== RESPONSE INTERCEPTOR ====================
   axiosInstance.interceptors.response.use(
-    // ---- Success (2xx) ----
     (response) => response,
 
-    // ---- Error ----
     async (error: AxiosError) => {
       const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
-      // Guard: if there's no config we can't retry
       if (!originalRequest) {
         return Promise.reject(error);
       }
 
       const status = error.response?.status;
 
-      // A 401 from login/logout/refresh itself means "bad credentials" or "no
-      // session" — not "access token expired" — so none of them should trigger
-      // a refresh attempt (which would also fail and mask the real error).
+      // A 401 from login/logout/refresh means bad credentials or no session,
+      // not an expired access token — none of them should trigger a refresh.
       const isAuthEndpoint =
         originalRequest.url === API_ENDPOINTS.AUTH.LOGIN ||
         originalRequest.url === API_ENDPOINTS.AUTH.LOGOUT ||
         originalRequest.url === API_ENDPOINTS.AUTH.REFRESH_TOKEN;
 
-      // ---- 401: Attempt token refresh ----
       if (status === 401 && !originalRequest._retry && !isAuthEndpoint) {
-        // Prevent infinite retry loops
         originalRequest._retry = true;
 
         if (isRefreshing) {
-          // Another refresh is already in progress — queue this request
           return new Promise<string>((resolve, reject) => {
             failedQueue.push({ resolve, reject });
           })
@@ -132,7 +84,6 @@ export const setupInterceptors = (): void => {
         isRefreshing = true;
 
         try {
-          // No body — the refresh token travels as an httpOnly cookie.
           const { data } = await axiosInstance.post<ApiResponse<RefreshTokenResponse>>(
             API_ENDPOINTS.AUTH.REFRESH_TOKEN,
           );
@@ -141,7 +92,6 @@ export const setupInterceptors = (): void => {
           setAccessToken(newAccessToken);
           processQueue(null, newAccessToken);
 
-          // Retry the original request with the new token
           if (originalRequest.headers) {
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           }
@@ -150,8 +100,6 @@ export const setupInterceptors = (): void => {
           processQueue(refreshError, null);
           clearAccessToken();
 
-          // Redirect to login — avoid using React Router here to keep
-          // interceptors framework-agnostic
           window.location.href = '/login';
 
           return Promise.reject(refreshError);
@@ -160,17 +108,14 @@ export const setupInterceptors = (): void => {
         }
       }
 
-      // ---- 403: Forbidden ----
       if (status === 403) {
         console.error('[Interceptor] Forbidden — insufficient permissions');
       }
 
-      // ---- 500: Server error ----
       if (status && status >= 500) {
         console.error('[Interceptor] Server error', error.response?.data);
       }
 
-      // Always reject so that Redux thunks can handle feature-specific errors
       return Promise.reject(error);
     },
   );

@@ -1,11 +1,3 @@
-// ============================================================
-// NeedsAttentionList — real low-stock / out-of-stock products
-// ============================================================
-// Replaces the original boilerplate's fully-fabricated "Activity Feed"
-// (hardcoded "Ada Admin adjusted the weekend shift schedule..." copy with
-// no data behind it). Status is never color-alone here — every row pairs
-// the status color with an icon and a text chip label.
-
 import React from 'react';
 import { Box, Typography, Chip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
