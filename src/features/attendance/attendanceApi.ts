@@ -8,6 +8,7 @@
 // staff member, so the UI fetches per row.
 
 import axiosInstance from '../../services/axios';
+import { API_ENDPOINTS } from '../../services/apiEndpoints';
 import type { ApiResponse } from '../../types/api';
 import type { Attendance, AttendanceStatus } from './attendanceTypes';
 
@@ -17,7 +18,7 @@ export const markAttendance = async (
   status: AttendanceStatus,
 ): Promise<ApiResponse<{ attendance: Attendance }>> => {
   const response = await axiosInstance.put<ApiResponse<{ attendance: Attendance }>>(
-    `/staff/${staffId}/attendance/${date}`,
+    API_ENDPOINTS.STAFF.ATTENDANCE_BY_DATE(staffId, date),
     { status },
   );
   return response.data;
@@ -34,7 +35,7 @@ export const getAttendanceForDate = async (
   date: string,
 ): Promise<Attendance | null> => {
   const response = await axiosInstance.get<ApiResponse<AttendanceListData>>(
-    `/staff/${staffId}/attendance`,
+    API_ENDPOINTS.STAFF.ATTENDANCE(staffId),
     { params: { from: date, to: date, page: 1, limit: 1 } },
   );
   return response.data.data.attendance[0] ?? null;

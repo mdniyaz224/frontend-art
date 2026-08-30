@@ -7,12 +7,11 @@
 // `data.staff` with a {page,limit,total,totalPages} pagination block.
 
 import axiosInstance from '../../services/axios';
+import { API_ENDPOINTS } from '../../services/apiEndpoints';
 import type { ApiResponse } from '../../types/api';
 import { buildQueryParams } from '../../utils/helpers';
 import type { Staff, StaffApiPagination, StaffCreateFormValues, StaffUpdateFormValues } from './staffTypes';
 import type { StaffRole } from '../../types/common';
-
-const BASE_URL = '/staff';
 
 /** Mirrors listStaffSchema's query params (staff.validator.ts) — sortBy/sortOrder
  * are the only ones currently driven by the UI; search/role/includeInactive
@@ -45,20 +44,20 @@ export const getStaffList = async (
     sortOrder: params.sortOrder,
   });
   const response = await axiosInstance.get<ApiResponse<StaffListData>>(
-    `${BASE_URL}?${queryString}`,
+    `${API_ENDPOINTS.STAFF.BASE}?${queryString}`,
   );
   return response.data;
 };
 
 export const getStaffById = async (id: string): Promise<ApiResponse<{ staff: Staff }>> => {
-  const response = await axiosInstance.get<ApiResponse<{ staff: Staff }>>(`${BASE_URL}/${id}`);
+  const response = await axiosInstance.get<ApiResponse<{ staff: Staff }>>(API_ENDPOINTS.STAFF.BY_ID(id));
   return response.data;
 };
 
 export const createStaff = async (
   data: StaffCreateFormValues,
 ): Promise<ApiResponse<{ staff: Staff }>> => {
-  const response = await axiosInstance.post<ApiResponse<{ staff: Staff }>>(BASE_URL, data);
+  const response = await axiosInstance.post<ApiResponse<{ staff: Staff }>>(API_ENDPOINTS.STAFF.BASE, data);
   return response.data;
 };
 
@@ -67,7 +66,7 @@ export const updateStaff = async (
   data: StaffUpdateFormValues,
 ): Promise<ApiResponse<{ staff: Staff }>> => {
   const response = await axiosInstance.patch<ApiResponse<{ staff: Staff }>>(
-    `${BASE_URL}/${id}`,
+    API_ENDPOINTS.STAFF.BY_ID(id),
     data,
   );
   return response.data;
@@ -76,14 +75,14 @@ export const updateStaff = async (
 /** Staff are soft-archived — there is no hard-delete endpoint. */
 export const deactivateStaff = async (id: string): Promise<ApiResponse<{ staff: Staff }>> => {
   const response = await axiosInstance.patch<ApiResponse<{ staff: Staff }>>(
-    `${BASE_URL}/${id}/deactivate`,
+    API_ENDPOINTS.STAFF.DEACTIVATE(id),
   );
   return response.data;
 };
 
 export const activateStaff = async (id: string): Promise<ApiResponse<{ staff: Staff }>> => {
   const response = await axiosInstance.patch<ApiResponse<{ staff: Staff }>>(
-    `${BASE_URL}/${id}/activate`,
+    API_ENDPOINTS.STAFF.ACTIVATE(id),
   );
   return response.data;
 };
@@ -93,7 +92,7 @@ export const assignStaffRole = async (
   role: StaffRole,
 ): Promise<ApiResponse<{ staff: Staff }>> => {
   const response = await axiosInstance.patch<ApiResponse<{ staff: Staff }>>(
-    `${BASE_URL}/${id}/role`,
+    API_ENDPOINTS.STAFF.ROLE(id),
     { role },
   );
   return response.data;

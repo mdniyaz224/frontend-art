@@ -8,6 +8,7 @@
 // sub-resource for auditable stock changes.
 
 import axiosInstance from '../../services/axios';
+import { API_ENDPOINTS } from '../../services/apiEndpoints';
 import type { ApiResponse } from '../../types/api';
 import { buildQueryParams } from '../../utils/helpers';
 import type {
@@ -19,8 +20,6 @@ import type {
   ProductUpdateFormValues,
   StockAdjustment,
 } from './inventoryTypes';
-
-const BASE_URL = '/products';
 
 export interface InventoryListParams extends InventoryFilters {
   page: number;
@@ -52,20 +51,20 @@ export const getProductList = async (
     sortOrder: params.sortOrder,
   });
   const response = await axiosInstance.get<ApiResponse<InventoryListData>>(
-    `${BASE_URL}?${queryString}`,
+    `${API_ENDPOINTS.PRODUCTS.BASE}?${queryString}`,
   );
   return response.data;
 };
 
 export const getProductById = async (id: string): Promise<ApiResponse<{ product: Product }>> => {
-  const response = await axiosInstance.get<ApiResponse<{ product: Product }>>(`${BASE_URL}/${id}`);
+  const response = await axiosInstance.get<ApiResponse<{ product: Product }>>(API_ENDPOINTS.PRODUCTS.BY_ID(id));
   return response.data;
 };
 
 export const createProduct = async (
   data: ProductCreateFormValues,
 ): Promise<ApiResponse<{ product: Product }>> => {
-  const response = await axiosInstance.post<ApiResponse<{ product: Product }>>(BASE_URL, data);
+  const response = await axiosInstance.post<ApiResponse<{ product: Product }>>(API_ENDPOINTS.PRODUCTS.BASE, data);
   return response.data;
 };
 
@@ -74,20 +73,20 @@ export const updateProduct = async (
   data: ProductUpdateFormValues,
 ): Promise<ApiResponse<{ product: Product }>> => {
   const response = await axiosInstance.patch<ApiResponse<{ product: Product }>>(
-    `${BASE_URL}/${id}`,
+    API_ENDPOINTS.PRODUCTS.BY_ID(id),
     data,
   );
   return response.data;
 };
 
 export const deleteProduct = async (id: string): Promise<ApiResponse<null>> => {
-  const response = await axiosInstance.delete<ApiResponse<null>>(`${BASE_URL}/${id}`);
+  const response = await axiosInstance.delete<ApiResponse<null>>(API_ENDPOINTS.PRODUCTS.BY_ID(id));
   return response.data;
 };
 
 export const getProductCategories = async (): Promise<ApiResponse<{ categories: string[] }>> => {
   const response = await axiosInstance.get<ApiResponse<{ categories: string[] }>>(
-    `${BASE_URL}/categories`,
+    API_ENDPOINTS.PRODUCTS.CATEGORIES,
   );
   return response.data;
 };
@@ -96,7 +95,7 @@ export const getProductStatusCounts = async (): Promise<
   ApiResponse<{ counts: ProductStatusCounts }>
 > => {
   const response = await axiosInstance.get<ApiResponse<{ counts: ProductStatusCounts }>>(
-    `${BASE_URL}/status-summary`,
+    API_ENDPOINTS.PRODUCTS.STATUS_SUMMARY,
   );
   return response.data;
 };
@@ -108,7 +107,7 @@ export const adjustStock = async (
 ): Promise<ApiResponse<{ product: Product; adjustment: StockAdjustment }>> => {
   const response = await axiosInstance.post<
     ApiResponse<{ product: Product; adjustment: StockAdjustment }>
-  >(`${BASE_URL}/${id}/adjustments`, { delta, reason });
+  >(API_ENDPOINTS.PRODUCTS.ADJUSTMENTS(id), { delta, reason });
   return response.data;
 };
 
@@ -123,7 +122,7 @@ export const getStockAdjustments = async (
 ): Promise<ApiResponse<StockAdjustmentListData>> => {
   const queryString = buildQueryParams({ page: params.page, limit: params.limit });
   const response = await axiosInstance.get<ApiResponse<StockAdjustmentListData>>(
-    `${BASE_URL}/${id}/adjustments?${queryString}`,
+    `${API_ENDPOINTS.PRODUCTS.ADJUSTMENTS(id)}?${queryString}`,
   );
   return response.data;
 };

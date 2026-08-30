@@ -3,9 +3,9 @@
 // ============================================================
 
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createApiThunk } from '../../utils/createApiThunk';
 import { loginApi, logoutApi, getCurrentUserApi } from './authApi';
 import { setAccessToken, clearAccessToken } from '../../services/interceptors';
-import { getApiErrorMessage } from '../../utils/helpers';
 import type { LoginRequest, LoginResponse, User } from './authTypes';
 
 /**
@@ -13,18 +13,11 @@ import type { LoginRequest, LoginResponse, User } from './authTypes';
  * The refresh token is set as an httpOnly cookie by the backend response
  * itself; there is nothing for the client to store for it.
  */
-export const login = createAsyncThunk<LoginResponse, LoginRequest>(
-  'auth/login',
-  async (credentials, { rejectWithValue }) => {
-    try {
-      const response = await loginApi(credentials);
-      setAccessToken(response.data.accessToken);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(getApiErrorMessage(error));
-    }
-  },
-);
+export const login = createApiThunk<LoginResponse, LoginRequest>('auth/login', async (credentials) => {
+  const response = await loginApi(credentials);
+  setAccessToken(response.data.accessToken);
+  return response.data;
+});
 
 /**
  * Logout thunk — clears tokens and user state.
@@ -43,15 +36,11 @@ export const logout = createAsyncThunk('auth/logout', async () => {
  * Get current user thunk — fetches the authenticated user's profile.
  * Used on app initialization to restore the session.
  */
-export const getCurrentUser = createAsyncThunk<User, void>(
+export const getCurrentUser = createApiThunk<User, void>(
   'auth/getCurrentUser',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await getCurrentUserApi();
-      return response.data.user;
-    } catch (error) {
-      clearAccessToken();
-      return rejectWithValue(getApiErrorMessage(error));
-    }
+  async () => {
+    const response = await getCurrentUserApi();
+    return response.data.user;
   },
+  { onError: clearAccessToken },
 );

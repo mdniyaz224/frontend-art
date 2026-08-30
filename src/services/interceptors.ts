@@ -31,7 +31,10 @@
 //    c. Redirect to login
 
 import axiosInstance from './axios';
+import { API_ENDPOINTS } from './apiEndpoints';
 import type { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
+import type { ApiResponse } from '../types/api';
+import type { RefreshTokenResponse } from '../features/auth/authTypes';
 
 // ----- Token helpers -----
 
@@ -99,8 +102,16 @@ export const setupInterceptors = (): void => {
 
       const status = error.response?.status;
 
+      // A 401 from login/logout/refresh itself means "bad credentials" or "no
+      // session" — not "access token expired" — so none of them should trigger
+      // a refresh attempt (which would also fail and mask the real error).
+      const isAuthEndpoint =
+        originalRequest.url === API_ENDPOINTS.AUTH.LOGIN ||
+        originalRequest.url === API_ENDPOINTS.AUTH.LOGOUT ||
+        originalRequest.url === API_ENDPOINTS.AUTH.REFRESH_TOKEN;
+
       // ---- 401: Attempt token refresh ----
-      if (status === 401 && !originalRequest._retry && originalRequest.url !== '/auth/refresh-token') {
+      if (status === 401 && !originalRequest._retry && !isAuthEndpoint) {
         // Prevent infinite retry loops
         originalRequest._retry = true;
 
@@ -122,9 +133,11 @@ export const setupInterceptors = (): void => {
 
         try {
           // No body — the refresh token travels as an httpOnly cookie.
-          const { data } = await axiosInstance.post('/auth/refresh-token');
+          const { data } = await axiosInstance.post<ApiResponse<RefreshTokenResponse>>(
+            API_ENDPOINTS.AUTH.REFRESH_TOKEN,
+          );
 
-          const newAccessToken: string = data.data.accessToken;
+          const newAccessToken = data.data.accessToken;
           setAccessToken(newAccessToken);
           processQueue(null, newAccessToken);
 

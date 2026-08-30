@@ -2,7 +2,7 @@
 // Staff Thunks
 // ============================================================
 
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createApiThunk } from '../../utils/createApiThunk';
 import {
   getStaffList,
   getStaffById,
@@ -14,96 +14,68 @@ import {
   type StaffListParams,
   type StaffListData,
 } from './staffApi';
-import { getApiErrorMessage } from '../../utils/helpers';
 import type { Staff, StaffCreateFormValues, StaffUpdateFormValues } from './staffTypes';
 import type { StaffRole } from '../../types/common';
 
 /**
  * Fetch paginated staff list.
  */
-export const fetchStaffList = createAsyncThunk<StaffListData, StaffListParams>(
+export const fetchStaffList = createApiThunk<StaffListData, StaffListParams>(
   'staff/fetchList',
-  async (params, { rejectWithValue }) => {
-    try {
-      const response = await getStaffList(params);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(getApiErrorMessage(error));
-    }
+  async (params) => {
+    const response = await getStaffList(params);
+    return response.data;
   },
 );
 
 /**
  * Fetch a single staff member by ID.
  */
-export const fetchStaffById = createAsyncThunk<Staff, string>(
-  'staff/fetchById',
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await getStaffById(id);
-      return response.data.staff;
-    } catch (error) {
-      return rejectWithValue(getApiErrorMessage(error));
-    }
-  },
-);
+export const fetchStaffById = createApiThunk<Staff, string>('staff/fetchById', async (id) => {
+  const response = await getStaffById(id);
+  return response.data.staff;
+});
 
 /**
  * Create a new staff member.
  */
-export const createStaffThunk = createAsyncThunk<Staff, StaffCreateFormValues>(
+export const createStaffThunk = createApiThunk<Staff, StaffCreateFormValues>(
   'staff/create',
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await createStaffApi(data);
-      return response.data.staff;
-    } catch (error) {
-      return rejectWithValue(getApiErrorMessage(error));
-    }
+  async (data) => {
+    const response = await createStaffApi(data);
+    return response.data.staff;
   },
 );
 
 /**
  * Update an existing staff member's profile fields.
  */
-export const updateStaffThunk = createAsyncThunk<
-  Staff,
-  { id: string; data: StaffUpdateFormValues }
->('staff/update', async ({ id, data }, { rejectWithValue }) => {
-  try {
+export const updateStaffThunk = createApiThunk<Staff, { id: string; data: StaffUpdateFormValues }>(
+  'staff/update',
+  async ({ id, data }) => {
     const response = await updateStaffApi(id, data);
     return response.data.staff;
-  } catch (error) {
-    return rejectWithValue(getApiErrorMessage(error));
-  }
-});
+  },
+);
 
 /**
  * Toggle a staff member's active status (soft archive / restore).
  */
-export const toggleStaffActiveThunk = createAsyncThunk<
-  Staff,
-  { id: string; isActive: boolean }
->('staff/toggleActive', async ({ id, isActive }, { rejectWithValue }) => {
-  try {
+export const toggleStaffActiveThunk = createApiThunk<Staff, { id: string; isActive: boolean }>(
+  'staff/toggleActive',
+  async ({ id, isActive }) => {
     const response = isActive ? await deactivateStaffApi(id) : await activateStaffApi(id);
     return response.data.staff;
-  } catch (error) {
-    return rejectWithValue(getApiErrorMessage(error));
-  }
-});
+  },
+);
 
 /**
  * Reassign a staff member's role.
  */
-export const assignStaffRoleThunk = createAsyncThunk<Staff, { id: string; role: StaffRole }>(
+export const assignStaffRoleThunk = createApiThunk<Staff, { id: string; role: StaffRole }>(
   'staff/assignRole',
-  async ({ id, role }, { rejectWithValue }) => {
-    try {
-      const response = await assignStaffRoleApi(id, role);
-      return response.data.staff;
-    } catch (error) {
-      return rejectWithValue(getApiErrorMessage(error));
-    }
+  async ({ id, role }) => {
+    const response = await assignStaffRoleApi(id, role);
+    return response.data.staff;
   },
 );

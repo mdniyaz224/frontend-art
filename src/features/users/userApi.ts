@@ -3,37 +3,38 @@
 // ============================================================
 
 import axiosInstance from '../../services/axios';
+import { API_ENDPOINTS } from '../../services/apiEndpoints';
 import type { ApiResponse, PaginatedResponse, ListQueryParams } from '../../types/api';
 import type { UserRecord, UserFormValues } from './userTypes';
 import { buildQueryParams } from '../../utils/helpers';
-
-const BASE_URL = '/users';
 
 // Only GET /users (admin-only, see be-boiler's user.routes.ts) exists on the backend today —
 // getUserById/createUser/updateUser/deleteUser below have no matching route; account
 // creation/edit/removal lives under /staff instead (see staff.service.ts on the backend).
 export const getUserList = async (params: ListQueryParams): Promise<PaginatedResponse<UserRecord>> => {
   const queryString = buildQueryParams(params as Record<string, unknown>);
-  const response = await axiosInstance.get<PaginatedResponse<UserRecord>>(`${BASE_URL}?${queryString}`);
+  const response = await axiosInstance.get<PaginatedResponse<UserRecord>>(
+    `${API_ENDPOINTS.USERS.BASE}?${queryString}`,
+  );
   return response.data;
 };
 
 export const getUserById = async (id: string): Promise<ApiResponse<UserRecord>> => {
-  const response = await axiosInstance.get<ApiResponse<UserRecord>>(`${BASE_URL}/${id}`);
+  const response = await axiosInstance.get<ApiResponse<UserRecord>>(API_ENDPOINTS.USERS.BY_ID(id));
   return response.data;
 };
 
 export const createUser = async (data: UserFormValues): Promise<ApiResponse<UserRecord>> => {
-  const response = await axiosInstance.post<ApiResponse<UserRecord>>(BASE_URL, data);
+  const response = await axiosInstance.post<ApiResponse<UserRecord>>(API_ENDPOINTS.USERS.BASE, data);
   return response.data;
 };
 
 export const updateUser = async (id: string, data: UserFormValues): Promise<ApiResponse<UserRecord>> => {
-  const response = await axiosInstance.put<ApiResponse<UserRecord>>(`${BASE_URL}/${id}`, data);
+  const response = await axiosInstance.put<ApiResponse<UserRecord>>(API_ENDPOINTS.USERS.BY_ID(id), data);
   return response.data;
 };
 
 export const deleteUser = async (id: string): Promise<ApiResponse<null>> => {
-  const response = await axiosInstance.delete<ApiResponse<null>>(`${BASE_URL}/${id}`);
+  const response = await axiosInstance.delete<ApiResponse<null>>(API_ENDPOINTS.USERS.BY_ID(id));
   return response.data;
 };

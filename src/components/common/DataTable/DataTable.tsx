@@ -1,5 +1,5 @@
 // ============================================================
-// DataTable — Generic Reusable Enterprise Data Table
+// DataTable — Generic Reusable Data Table
 // ============================================================
 
 import React, { useCallback, useMemo } from 'react';

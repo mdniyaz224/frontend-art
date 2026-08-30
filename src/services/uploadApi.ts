@@ -7,6 +7,7 @@
 // backend's /uploads static file route.
 
 import axiosInstance from './axios';
+import { API_ENDPOINTS } from './apiEndpoints';
 import type { ApiResponse } from '../types/api';
 
 export const uploadImage = async (file: File): Promise<string> => {
@@ -18,7 +19,7 @@ export const uploadImage = async (file: File): Promise<string> => {
   // body and setting the multipart boundary itself — override it to
   // `undefined` so that auto-detection kicks in for this one request.
   const response = await axiosInstance.post<ApiResponse<{ url: string }>>(
-    '/uploads/image',
+    API_ENDPOINTS.UPLOADS.IMAGE,
     formData,
     { headers: { 'Content-Type': undefined } },
   );
