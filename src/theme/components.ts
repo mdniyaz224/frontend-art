@@ -8,6 +8,7 @@ export const componentOverrides: Components<Theme> = {
   MuiCssBaseline: {
     styleOverrides: {
       body: {
+        overflow: 'hidden',
         scrollbarWidth: 'thin',
         backgroundImage: 'radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.08), transparent 25%), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 25%)',
         backgroundAttachment: 'fixed',
