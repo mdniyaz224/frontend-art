@@ -103,7 +103,18 @@ function DataTable<T extends { id: string }>({
   const virtuosoComponents: TableComponents<T> = useMemo(
     () => ({
       Scroller: React.forwardRef<HTMLDivElement>((props, ref) => (
-        <TableContainer {...props} ref={ref} />
+        <TableContainer
+          {...props}
+          ref={ref}
+          sx={{
+            overflowY: 'auto',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            '&::-webkit-scrollbar': {
+              display: 'none',
+            },
+          }}
+        />
       )),
       Table: (props) => (
         <Table {...props} size="medium" sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} />
