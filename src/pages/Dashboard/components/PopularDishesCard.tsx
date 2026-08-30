@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Box, Card, CardContent, Chip, Skeleton, Typography } from '@mui/material';
+import { Avatar, Box, Card, CardContent, Skeleton, Typography } from '@mui/material';
 import RestaurantMenuRoundedIcon from '@mui/icons-material/RestaurantMenuRounded';
 import { STATUS_COLORS } from '../dashboardPalette';
 import { formatCurrency } from '../../../utils/formatters';
@@ -39,7 +39,7 @@ const PopularDishesCard: React.FC<PopularDishesCardProps> = ({ title, dishes, su
             </Typography>
           </Box>
         ) : (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {dishes.map((dish) => (
               <Box
                 key={dish.productId}
@@ -47,10 +47,11 @@ const PopularDishesCard: React.FC<PopularDishesCardProps> = ({ title, dishes, su
                   display: 'flex',
                   alignItems: 'center',
                   gap: 1.5,
-                  py: 1.25,
-                  borderBottom: '1px solid',
+                  p: 1.25,
+                  borderRadius: 3,
+                  bgcolor: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid',
                   borderColor: 'divider',
-                  '&:last-of-type': { borderBottom: 'none' },
                 }}
               >
                 <Avatar variant="rounded" src={dish.image} sx={{ width: 44, height: 44, flexShrink: 0 }}>
@@ -64,19 +65,17 @@ const PopularDishesCard: React.FC<PopularDishesCardProps> = ({ title, dishes, su
                     {subLine(dish)}
                   </Typography>
                 </Box>
-                <Chip
-                  size="small"
-                  label={dish.isInStock ? 'In Stock' : 'Out of Stock'}
-                  sx={{
-                    bgcolor: `${dish.isInStock ? STATUS_COLORS.good : STATUS_COLORS.critical}22`,
-                    color: dish.isInStock ? STATUS_COLORS.good : STATUS_COLORS.critical,
-                    fontWeight: 700,
-                    flexShrink: 0,
-                  }}
-                />
-                <Typography variant="body2" sx={{ fontWeight: 700, minWidth: 64, textAlign: 'right' }}>
-                  {formatCurrency(dish.price)}
-                </Typography>
+                <Box sx={{ flexShrink: 0, textAlign: 'right' }}>
+                  <Typography
+                    variant="caption"
+                    sx={{ display: 'block', fontWeight: 700, color: dish.isInStock ? STATUS_COLORS.good : STATUS_COLORS.critical }}
+                  >
+                    {dish.isInStock ? 'In Stock' : 'Out of Stock'}
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                    {formatCurrency(dish.price)}
+                  </Typography>
+                </Box>
               </Box>
             ))}
           </Box>

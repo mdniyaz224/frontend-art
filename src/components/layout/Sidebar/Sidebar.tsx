@@ -17,6 +17,7 @@ import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
 import { useAppSelector } from '../../../Store/hooks';
 import { selectPermissions } from '../../../features/auth/authSelectors';
 import { SIDEBAR_WIDTH, SIDEBAR_COLLAPSED_WIDTH, HEADER_HEIGHT, PERMISSIONS } from '../../../utils/constants';
+import { PASTEL_PINK_ACCENT } from '../../../theme/accents';
 
 interface SidebarItem {
   id: string;
@@ -93,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({ desktopOpen, mobileOpen, onMobileClos
         {open && (
           <Box sx={{ ml: 1.5 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 700, lineHeight: 1.2 }}>
-              Foodline
+              COSYPOS
             </Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary', lineHeight: 1 }}>
               Staff Manager
@@ -124,11 +125,11 @@ const Sidebar: React.FC<SidebarProps> = ({ desktopOpen, mobileOpen, onMobileClos
                   mb: 0.5,
                   ...(active && {
                     '& .MuiListItemIcon-root': {
-                      color: 'primary.main',
+                      color: PASTEL_PINK_ACCENT,
                     },
                     '& .MuiListItemText-primary': {
                       fontWeight: 600,
-                      color: 'primary.main',
+                      color: PASTEL_PINK_ACCENT,
                     },
                   }),
                   '&:hover': {
@@ -141,7 +142,7 @@ const Sidebar: React.FC<SidebarProps> = ({ desktopOpen, mobileOpen, onMobileClos
                     minWidth: 0,
                     mr: open ? 2 : 0,
                     justifyContent: 'center',
-                    color: active ? 'primary.main' : 'text.secondary',
+                    color: active ? PASTEL_PINK_ACCENT : 'text.secondary',
                   }}
                 >
                   {item.icon}
@@ -175,7 +176,7 @@ const Sidebar: React.FC<SidebarProps> = ({ desktopOpen, mobileOpen, onMobileClos
       {open && (
         <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider' }}>
           <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-            © {new Date().getFullYear()} Foodline ERP
+            © {new Date().getFullYear()} COSYPOS
           </Typography>
         </Box>
       )}

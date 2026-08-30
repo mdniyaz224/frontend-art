@@ -19,7 +19,7 @@ import QuickActionsCard from './components/QuickActionsCard';
 import { useAppDispatch, useAppSelector } from '../../Store/hooks';
 import { usePermission } from '../../hooks/usePermission';
 import { PERMISSIONS } from '../../utils/constants';
-import { CATEGORICAL_SEQUENCE, OVERVIEW_SERIES_COLORS, STATUS_COLORS } from './dashboardPalette';
+import { CATEGORICAL_SEQUENCE, SPARKLINE_COLOR, STAT_ICON_COLORS, STATUS_COLORS } from './dashboardPalette';
 import { fetchStaffList } from '../../features/staff/staffThunk';
 import { selectStaffList, selectStaffLoading, selectStaffPagination } from '../../features/staff/staffSelectors';
 import { STAFF_ROLE_OPTIONS } from '../../features/staff/staffTypes';
@@ -161,8 +161,8 @@ const DashboardPage: React.FC = () => {
         title="Dashboard"
         subtitle={
           fullName
-            ? `Welcome back, ${fullName} — here's what's happening at Foodline today.`
-            : "Welcome to Foodline ERP — here's what's happening today."
+            ? `Welcome back, ${fullName} — here's what's happening at COSYPOS today.`
+            : "Welcome to COSYPOS — here's what's happening today."
         }
       />
 
@@ -174,9 +174,9 @@ const DashboardPage: React.FC = () => {
             value={formatCompactCurrency(summary?.dailySales.value ?? 0)}
             subtitle={summary ? formatDate(summary.dailySales.date, 'D MMMM YYYY') : '—'}
             icon={<PaidRoundedIcon sx={{ color: '#fff', fontSize: 20 }} />}
-            iconColor={OVERVIEW_SERIES_COLORS.sales}
+            iconColor={STAT_ICON_COLORS.pink}
             sparkline={summary?.dailySales.sparkline ?? []}
-            sparklineColor={OVERVIEW_SERIES_COLORS.sales}
+            sparklineColor={SPARKLINE_COLOR}
             loading={summaryLoading && !summary}
           />
         </Grid>
@@ -186,9 +186,9 @@ const DashboardPage: React.FC = () => {
             value={formatCompactCurrency(summary?.monthlyRevenue.value ?? 0)}
             subtitle={summary?.monthlyRevenue.rangeLabel ?? '—'}
             icon={<AccountBalanceWalletRoundedIcon sx={{ color: '#fff', fontSize: 20 }} />}
-            iconColor={OVERVIEW_SERIES_COLORS.revenue}
+            iconColor={STAT_ICON_COLORS.navy}
             sparkline={summary?.monthlyRevenue.sparkline ?? []}
-            sparklineColor={OVERVIEW_SERIES_COLORS.revenue}
+            sparklineColor={SPARKLINE_COLOR}
             loading={summaryLoading && !summary}
           />
         </Grid>
@@ -202,9 +202,9 @@ const DashboardPage: React.FC = () => {
                 : '—'
             }
             icon={<TableRestaurantRoundedIcon sx={{ color: '#fff', fontSize: 20 }} />}
-            iconColor={CATEGORICAL_SEQUENCE[0]}
+            iconColor={STAT_ICON_COLORS.pink}
             sparkline={summary?.tableOccupancy.sparkline ?? []}
-            sparklineColor={CATEGORICAL_SEQUENCE[0]}
+            sparklineColor={SPARKLINE_COLOR}
             loading={summaryLoading && !summary}
           />
         </Grid>

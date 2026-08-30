@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Button, Card, CardContent, Typography, ToggleButton, ToggleButtonGroup, Skeleton } from '@mui/material';
+import { Box, Button, Card, CardContent, Typography, Skeleton } from '@mui/material';
 import FileDownloadRoundedIcon from '@mui/icons-material/FileDownloadRounded';
-import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import {
   CHART_INK,
   OVERVIEW_SERIES_COLORS,
@@ -18,7 +18,12 @@ const RANGE_OPTIONS: { label: string; value: OverviewRange }[] = [
   { label: 'Weekly', value: 'weekly' },
 ];
 
-const formatAxisTick = (v: number): string => (v >= 1000 ? `$${Math.round(v / 1000)}k` : `$${v}`);
+const LEGEND_ITEMS: { label: string; color: string }[] = [
+  { label: 'Sales', color: OVERVIEW_SERIES_COLORS.sales },
+  { label: 'Revenue', color: CHART_INK.secondary },
+];
+
+const formatAxisTick = (v: number): string => (v >= 1000 ? `${Math.round(v / 1000)}k` : `${v}`);
 
 interface OverviewChartProps {
   data: OverviewPoint[];
@@ -40,39 +45,65 @@ const OverviewChart: React.FC<OverviewChartProps> = ({ data, range, onRangeChang
             alignItems: 'center',
             flexWrap: 'wrap',
             gap: 2,
-            mb: 3,
+            mb: 1,
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
             Overview
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <ToggleButtonGroup
-              size="small"
-              exclusive
-              value={range}
-              onChange={(_e, next: OverviewRange | null) => {
-                if (next) onRangeChange(next);
-              }}
-            >
-              {RANGE_OPTIONS.map((opt) => (
-                <ToggleButton key={opt.value} value={opt.value} sx={{ px: 2, textTransform: 'none' }}>
-                  {opt.label}
-                </ToggleButton>
-              ))}
-            </ToggleButtonGroup>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              {RANGE_OPTIONS.map((opt) => {
+                const selected = opt.value === range;
+                return (
+                  <Button
+                    key={opt.value}
+                    size="small"
+                    onClick={() => onRangeChange(opt.value)}
+                    sx={{
+                      px: 2,
+                      py: 0.5,
+                      minWidth: 0,
+                      borderRadius: 999,
+                      fontWeight: 600,
+                      color: selected ? '#fff' : 'text.secondary',
+                      bgcolor: selected ? OVERVIEW_SERIES_COLORS.sales : 'transparent',
+                      '&:hover': {
+                        bgcolor: selected ? OVERVIEW_SERIES_COLORS.sales : 'action.hover',
+                        boxShadow: 'none',
+                        transform: 'none',
+                      },
+                    }}
+                  >
+                    {opt.label}
+                  </Button>
+                );
+              })}
+            </Box>
             {canExport && (
               <Button
-                variant="outlined"
+                variant="contained"
                 size="small"
                 startIcon={<FileDownloadRoundedIcon fontSize="small" />}
                 onClick={onExport}
                 disabled={data.length === 0}
+                sx={{ bgcolor: 'rgba(255, 255, 255, 0.08)', color: 'text.primary', '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.14)' } }}
               >
                 Export
               </Button>
             )}
           </Box>
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5, mb: 2 }}>
+          {LEGEND_ITEMS.map((item) => (
+            <Box key={item.label} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: item.color }} />
+              <Typography variant="caption" color="text.secondary">
+                {item.label}
+              </Typography>
+            </Box>
+          ))}
         </Box>
 
         {loading ? (
@@ -106,27 +137,26 @@ const OverviewChart: React.FC<OverviewChartProps> = ({ data, range, onRangeChang
                   labelStyle={tooltipLabelStyle}
                   itemStyle={tooltipItemStyle}
                   formatter={(value, name) => [formatCurrency(Number(value) || 0), String(name)]}
-                />
-                <Legend
-                  formatter={(value) => <span style={{ color: CHART_INK.secondary }}>{value}</span>}
-                  wrapperStyle={{ fontSize: 12 }}
+                  cursor={{ stroke: OVERVIEW_SERIES_COLORS.sales, strokeWidth: 1, strokeDasharray: '4 4' }}
                 />
                 <Line
                   type="monotone"
                   dataKey="sales"
                   name="Sales"
                   stroke={OVERVIEW_SERIES_COLORS.sales}
-                  strokeWidth={2}
+                  strokeWidth={3}
                   dot={false}
+                  activeDot={{ r: 6, fill: OVERVIEW_SERIES_COLORS.sales, stroke: '#fff', strokeWidth: 2 }}
                   isAnimationActive={false}
                 />
                 <Line
                   type="monotone"
                   dataKey="revenue"
                   name="Revenue"
-                  stroke={OVERVIEW_SERIES_COLORS.revenue}
+                  stroke={CHART_INK.secondary}
                   strokeWidth={2}
                   dot={false}
+                  activeDot={{ r: 5, fill: CHART_INK.secondary, stroke: '#fff', strokeWidth: 2 }}
                   isAnimationActive={false}
                 />
               </LineChart>

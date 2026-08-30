@@ -167,10 +167,10 @@ export const componentOverrides: Components<Theme> = {
         padding: '10px 16px',
         transition: 'all 0.2s ease-in-out',
         '&.Mui-selected': {
-          background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0) 100%)',
-          borderLeft: '4px solid #6366f1',
+          background: 'linear-gradient(90deg, rgba(249, 168, 212, 0.2) 0%, rgba(249, 168, 212, 0) 100%)',
+          borderLeft: '4px solid #f9a8d4',
           '&:hover': {
-            background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.3) 0%, rgba(99, 102, 241, 0) 100%)',
+            background: 'linear-gradient(90deg, rgba(249, 168, 212, 0.3) 0%, rgba(249, 168, 212, 0) 100%)',
           },
         },
         '&:hover': {

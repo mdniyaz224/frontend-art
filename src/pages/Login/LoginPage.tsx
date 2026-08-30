@@ -125,7 +125,7 @@ const LoginPage: React.FC = () => {
               Welcome Back
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-              Sign in to Foodline ERP
+              Sign in to COSYPOS
             </Typography>
           </Box>
 
@@ -144,7 +144,7 @@ const LoginPage: React.FC = () => {
                 control={control}
                 label="Email Address"
                 type="email"
-                placeholder="admin@foodline.com"
+                placeholder="admin@cosypos.com"
                 disabled={loading}
                 autoComplete="email"
               />

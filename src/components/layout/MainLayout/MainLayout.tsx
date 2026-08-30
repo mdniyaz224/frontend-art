@@ -49,7 +49,8 @@ const MainLayout: React.FC = () => {
             mt: `${HEADER_HEIGHT}px`,
             p: { xs: 2, sm: 3 },
             transition: 'width 0.25s ease, margin-left 0.25s ease',
-            minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
+            height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+            overflowY: 'auto',
           }}
         >
           <Outlet />

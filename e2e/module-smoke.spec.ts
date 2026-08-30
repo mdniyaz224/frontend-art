@@ -3,7 +3,7 @@ import { test, expect, type Page } from '@playwright/test';
 const mockUser = {
   id: 'u-admin-1',
   name: 'Admin User',
-  email: 'admin@foodline.com',
+  email: 'admin@cosypos.com',
   role: 'admin',
   isActive: true,
   isEmailVerified: true,
@@ -14,7 +14,7 @@ const mockUser = {
 const mockStaff = {
   id: 's-001',
   name: 'Alice Johnson',
-  email: 'alice@foodline.com',
+  email: 'alice@cosypos.com',
   role: 'manager',
   isActive: true,
   phone: '555-0101',
@@ -192,7 +192,7 @@ async function mockApiRoutes(page: Page) {
 async function login(page: Page) {
   await mockApiRoutes(page);
   await page.goto('/login');
-  await page.getByLabel('Email Address').fill('admin@foodline.com');
+  await page.getByLabel('Email Address').fill('admin@cosypos.com');
   await page.getByLabel('Password').fill('password123');
   await page.getByRole('button', { name: 'Sign In' }).click();
   await expect(page).toHaveURL(/\/dashboard$/);

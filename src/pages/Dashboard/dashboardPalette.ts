@@ -40,3 +40,12 @@ export const OVERVIEW_SERIES_COLORS = {
   sales: '#ec4899',
   revenue: '#8b5cf6',
 } as const;
+
+/** Sparkline bars on the top stat cards are always this green, regardless of the metric's own accent color. */
+export const SPARKLINE_COLOR = '#22c55e';
+
+/** Icon-badge colors for the top stat cards. */
+export const STAT_ICON_COLORS = {
+  pink: '#ec4899',
+  navy: '#334155',
+} as const;

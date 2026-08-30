@@ -4,7 +4,7 @@ test.describe('Login', () => {
   test('signs in and lands on the dashboard', async ({ page }) => {
     await page.goto('/login');
 
-    await page.getByLabel('Email Address').fill('admin@foodline.com');
+    await page.getByLabel('Email Address').fill('admin@cosypos.com');
     await page.getByLabel('Password').fill('password123');
     await page.getByRole('button', { name: 'Sign In' }).click();
 

@@ -28,12 +28,7 @@ const SparklineStatCard: React.FC<SparklineStatCardProps> = ({
     <Card sx={{ height: '100%' }}>
       <CardContent sx={{ p: 3 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
-          <Typography
-            variant="subtitle2"
-            color="text.secondary"
-            sx={{ letterSpacing: '0.02em', textTransform: 'uppercase' }}
-            noWrap
-          >
+          <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 600 }} noWrap>
             {title}
           </Typography>
           <Box
