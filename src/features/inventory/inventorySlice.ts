@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { InventoryState } from './inventoryTypes';
-import { DEFAULT_PAGINATION } from '../../types/api';
+import { DEFAULT_PAGINATION, toPaginationMeta } from '../../types/api';
 import {
   fetchProductList,
   fetchProductById,
@@ -51,16 +51,7 @@ const inventorySlice = createSlice({
       .addCase(fetchProductList.fulfilled, (state, action) => {
         state.loading = false;
         state.list = action.payload.products;
-
-        const { page, limit, total, totalPages } = action.payload.pagination;
-        state.pagination = {
-          page,
-          pageSize: limit,
-          totalItems: total,
-          totalPages,
-          hasNextPage: page < totalPages,
-          hasPreviousPage: page > 1,
-        };
+        state.pagination = toPaginationMeta(action.payload.pagination);
       })
       .addCase(fetchProductList.rejected, (state, action) => {
         state.loading = false;
@@ -163,15 +154,7 @@ const inventorySlice = createSlice({
       .addCase(fetchStockAdjustmentsThunk.fulfilled, (state, action) => {
         state.adjustmentsLoading = false;
         state.adjustments = action.payload.adjustments;
-        const { page, limit, total, totalPages } = action.payload.pagination;
-        state.adjustmentsPagination = {
-          page,
-          pageSize: limit,
-          totalItems: total,
-          totalPages,
-          hasNextPage: page < totalPages,
-          hasPreviousPage: page > 1,
-        };
+        state.adjustmentsPagination = toPaginationMeta(action.payload.pagination);
       })
       .addCase(fetchStockAdjustmentsThunk.rejected, (state, action) => {
         state.adjustmentsLoading = false;

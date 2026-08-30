@@ -66,3 +66,19 @@ export const DEFAULT_PAGINATION: PaginationMeta = {
   hasNextPage: false,
   hasPreviousPage: false,
 };
+
+export interface RawApiPagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+export const toPaginationMeta = ({ page, limit, total, totalPages }: RawApiPagination): PaginationMeta => ({
+  page,
+  pageSize: limit,
+  totalItems: total,
+  totalPages,
+  hasNextPage: page < totalPages,
+  hasPreviousPage: page > 1,
+});

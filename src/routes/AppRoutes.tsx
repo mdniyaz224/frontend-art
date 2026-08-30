@@ -1,11 +1,12 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from '../components/layout/MainLayout/MainLayout';
 import ProtectedRoute from './ProtectedRoute';
 import PermissionRoute from './PermissionRoute';
 import { protectedRoutes } from './routeConfig';
-import LoginPage from '../pages/Login/LoginPage';
 import LoadingOverlay from '../components/common/LoadingOverlay/LoadingOverlay';
+
+const LoginPage = lazy(() => import('../pages/Login/LoginPage'));
 
 const AppRoutes: React.FC = () => {
   return (

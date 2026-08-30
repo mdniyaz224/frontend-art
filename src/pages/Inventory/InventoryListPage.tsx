@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -13,7 +13,10 @@ import ConfirmDialog from '../../components/common/ConfirmDialog/ConfirmDialog';
 import InventoryTable from '../../features/inventory/components/InventoryTable';
 import InventoryFormDrawer from '../../features/inventory/components/InventoryFormDrawer';
 import AdjustStockDialog from '../../features/inventory/components/AdjustStockDialog';
-import StockAdjustmentHistoryDialog from '../../features/inventory/components/StockAdjustmentHistoryDialog';
+
+const StockAdjustmentHistoryDialog = lazy(
+  () => import('../../features/inventory/components/StockAdjustmentHistoryDialog'),
+);
 import { useAppDispatch, useAppSelector } from '../../Store/hooks';
 import {
   selectProductList,
@@ -89,6 +92,7 @@ const InventoryListPage: React.FC = () => {
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
   const [adjustTarget, setAdjustTarget] = useState<Product | null>(null);
   const [historyTarget, setHistoryTarget] = useState<Product | null>(null);
+  const [historyDialogMounted, setHistoryDialogMounted] = useState(false);
 
   const editingProduct =
     drawerState?.mode === 'edit' ? (list.find((p) => p.id === drawerState.productId) ?? null) : null;
@@ -381,7 +385,10 @@ const InventoryListPage: React.FC = () => {
             onPageSizeChange={handlePageSizeChange}
             onEdit={(product) => setDrawerState({ mode: 'edit', productId: product.id })}
             onDelete={(product) => setDeleteTarget(product)}
-            onViewHistory={(product) => setHistoryTarget(product)}
+            onViewHistory={(product) => {
+              setHistoryTarget(product);
+              setHistoryDialogMounted(true);
+            }}
             onRetry={() => loadData(pagination.page)}
           />
         </Box>
@@ -414,11 +421,15 @@ const InventoryListPage: React.FC = () => {
         onSuccess={refreshAll}
       />
 
-      <StockAdjustmentHistoryDialog
-        open={!!historyTarget}
-        product={historyTarget}
-        onClose={() => setHistoryTarget(null)}
-      />
+      {historyDialogMounted && (
+        <Suspense fallback={null}>
+          <StockAdjustmentHistoryDialog
+            open={!!historyTarget}
+            product={historyTarget}
+            onClose={() => setHistoryTarget(null)}
+          />
+        </Suspense>
+      )}
     </Box>
   );
 };

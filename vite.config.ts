@@ -11,6 +11,17 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'redux-vendor': ['@reduxjs/toolkit', 'react-redux'],
+          'mui-vendor': ['@mui/material', '@mui/icons-material', '@mui/x-date-pickers', '@emotion/react', '@emotion/styled'],
+          'charts-vendor': ['recharts'],
+          'forms-vendor': ['formik', 'yup'],
+        },
+      },
+    },
   },
   test: {
     environment: 'jsdom',

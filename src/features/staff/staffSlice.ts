@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { StaffState } from './staffTypes';
-import { DEFAULT_PAGINATION } from '../../types/api';
+import { DEFAULT_PAGINATION, toPaginationMeta } from '../../types/api';
 import {
   fetchStaffList,
   fetchStaffById,
@@ -40,16 +40,7 @@ const staffSlice = createSlice({
       .addCase(fetchStaffList.fulfilled, (state, action) => {
         state.loading = false;
         state.list = action.payload.staff;
-
-        const { page, limit, total, totalPages } = action.payload.pagination;
-        state.pagination = {
-          page,
-          pageSize: limit,
-          totalItems: total,
-          totalPages,
-          hasNextPage: page < totalPages,
-          hasPreviousPage: page > 1,
-        };
+        state.pagination = toPaginationMeta(action.payload.pagination);
       })
       .addCase(fetchStaffList.rejected, (state, action) => {
         state.loading = false;

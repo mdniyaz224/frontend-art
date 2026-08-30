@@ -1,4 +1,5 @@
 import type { BaseEntity, StaffRole } from '../../types/common';
+import type { PaginationMeta } from '../../types/api';
 
 export interface Staff extends BaseEntity {
   name: string;
@@ -63,14 +64,7 @@ export interface StaffState {
   detailLoading: boolean;
   submitting: boolean;
   error: string | null;
-  pagination: {
-    page: number;
-    pageSize: number;
-    totalItems: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-  };
+  pagination: PaginationMeta;
 }
 
 export const STAFF_ROLE_OPTIONS: { label: string; value: StaffRole }[] = [

@@ -1,4 +1,5 @@
 import type { BaseEntity } from '../../types/common';
+import type { PaginationMeta } from '../../types/api';
 
 export type ProductStatus = 'active' | 'inactive' | 'draft';
 export type ProductUnit = 'piece' | 'kg' | 'litre' | 'dozen' | 'box';
@@ -88,28 +89,14 @@ export interface InventoryState {
   categories: string[];
   statusCounts: ProductStatusCounts | null;
   adjustments: StockAdjustment[];
-  adjustmentsPagination: {
-    page: number;
-    pageSize: number;
-    totalItems: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-  };
+  adjustmentsPagination: PaginationMeta;
   loading: boolean;
   detailLoading: boolean;
   submitting: boolean;
   adjusting: boolean;
   adjustmentsLoading: boolean;
   error: string | null;
-  pagination: {
-    page: number;
-    pageSize: number;
-    totalItems: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-  };
+  pagination: PaginationMeta;
 }
 
 export const PRODUCT_STATUS_OPTIONS: { label: string; value: ProductStatus }[] = [
