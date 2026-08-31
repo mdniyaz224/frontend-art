@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { login, mockApiRoutes } from './mocks';
 
-test.describe('Login', () => {
+test.describe('Auth', () => {
   test('signs in and lands on the dashboard', async ({ page }) => {
+    await mockApiRoutes(page);
     await page.goto('/login');
 
     await page.getByLabel('Email Address').fill('admin@cosypos.com');
@@ -13,6 +15,7 @@ test.describe('Login', () => {
   });
 
   test('shows validation errors for an empty form', async ({ page }) => {
+    await mockApiRoutes(page);
     await page.goto('/login');
 
     await page.getByRole('button', { name: 'Sign In' }).click();
@@ -24,10 +27,21 @@ test.describe('Login', () => {
     await expect(page).toHaveURL(/\/login$/);
   });
 
-  test('redirects back to login when visiting a protected route unauthenticated', async ({
-    page,
-  }) => {
+  test('redirects back to login when visiting a protected route unauthenticated', async ({ page }) => {
     await page.goto('/dashboard');
+    await expect(page).toHaveURL(/\/login$/);
+  });
+
+  test('logs out and returns to login', async ({ page }) => {
+    await login(page);
+
+    await page.getByRole('button', { name: 'Account' }).click();
+    await page.getByRole('menuitem', { name: 'Logout' }).click();
+
+    await expect(page).toHaveURL(/\/login$/);
+
+    // The session is really gone — a protected route bounces back to login.
+    await page.goto('/staff');
     await expect(page).toHaveURL(/\/login$/);
   });
 });
