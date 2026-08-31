@@ -1,7 +1,3 @@
-export const CATEGORICAL_SEQUENCE = ['#3987e5', '#d95926', '#199e70'] as const;
-
-export const SEQUENTIAL_HUE = '#3987e5';
-
 export const STATUS_COLORS = {
   good: '#0ca30c',
   warning: '#fab219',

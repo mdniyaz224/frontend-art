@@ -185,9 +185,16 @@ const InventoryListPage: React.FC = () => {
         )}
       </Box>
 
-      <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', lg: 'row' },
+          gap: 3,
+          alignItems: { xs: 'stretch', lg: 'flex-start' },
+        }}
+      >
         {}
-        <Box sx={{ width: 260, flexShrink: 0 }}>
+        <Box sx={{ width: { xs: '100%', lg: 260 }, flexShrink: 0 }}>
           <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
             Product Status
           </Typography>

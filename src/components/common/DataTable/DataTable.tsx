@@ -94,6 +94,18 @@ function DataTable<T extends { id: string }>({
     return String(value);
   };
 
+  // table-layout:fixed is required for TableVirtuoso's row virtualization to work,
+  // but it also means the table always shrinks to fill its container — on narrow
+  // screens that squeezes every column below its minWidth and text overlaps. Giving
+  // the table an explicit minWidth (sum of each column's minWidth) combined with
+  // horizontal scroll on the container fixes that: columns keep their intended
+  // width and the table scrolls sideways instead of collapsing.
+  const tableMinWidth = useMemo(() => {
+    const columnsWidth = columns.reduce((sum, col) => sum + (Number(col.minWidth) || 120), 0);
+    const actionsWidth = actions && actions.length > 0 ? 120 : 0;
+    return 64 + columnsWidth + actionsWidth;
+  }, [columns, actions]);
+
   const virtuosoComponents: TableComponents<T> = useMemo(
     () => ({
       Scroller: React.forwardRef<HTMLDivElement>((props, ref) => (
@@ -101,7 +113,7 @@ function DataTable<T extends { id: string }>({
           {...props}
           ref={ref}
           sx={{
-            overflowY: 'auto',
+            overflow: 'auto',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
             '&::-webkit-scrollbar': {
@@ -111,7 +123,11 @@ function DataTable<T extends { id: string }>({
         />
       )),
       Table: (props) => (
-        <Table {...props} size="medium" sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} />
+        <Table
+          {...props}
+          size="medium"
+          sx={{ borderCollapse: 'separate', tableLayout: 'fixed', minWidth: tableMinWidth }}
+        />
       ),
       TableHead: React.forwardRef<HTMLTableSectionElement>((props, ref) => (
         <TableHead {...props} ref={ref} />
@@ -127,7 +143,7 @@ function DataTable<T extends { id: string }>({
         <TableBody {...props} ref={ref} />
       )),
     }),
-    [loading],
+    [loading, tableMinWidth],
   );
 
   if (error && !loading) {
@@ -198,7 +214,7 @@ function DataTable<T extends { id: string }>({
                 align={column.align || 'left'}
                 sx={{
                   minWidth: column.minWidth,
-                  width: column.width,
+                  width: column.width ?? column.minWidth,
                   bgcolor: 'background.paper',
                 }}
               >
@@ -216,7 +232,7 @@ function DataTable<T extends { id: string }>({
               </TableCell>
             ))}
             {actions && actions.length > 0 && (
-              <TableCell align="right" sx={{ bgcolor: 'background.paper', minWidth: 120 }}>
+              <TableCell align="right" sx={{ bgcolor: 'background.paper', minWidth: 120, width: 120 }}>
                 <Typography variant="caption" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                   Actions
                 </Typography>

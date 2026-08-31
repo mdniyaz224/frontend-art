@@ -67,7 +67,7 @@ const StaffDetailPage: React.FC = () => {
   const [editingRole, setEditingRole] = useState(false);
   const [pendingRole, setPendingRole] = useState<StaffRole | ''>('');
 
-  usePageTitle(staff?.name ?? null);
+  usePageTitle(staff?.name ?? null, true);
 
   useEffect(() => {
     if (id) dispatch(fetchStaffById(id));

@@ -8,7 +8,7 @@ import StaffNameCell from './StaffNameCell';
 import type { DataTableColumn, DataTableAction } from '../../../types/common';
 import type { PaginationMeta } from '../../../types/api';
 import type { Staff } from '../staffTypes';
-import { formatCurrency, formatShiftRange, shortId } from '../../../utils/formatters';
+import { formatCurrency, formatShiftRange } from '../../../utils/formatters';
 import { usePermission } from '../../../hooks/usePermission';
 import { PERMISSIONS } from '../../../utils/constants';
 
@@ -48,12 +48,6 @@ const StaffTable: React.FC<StaffTableProps> = ({
   const canManageStatus = usePermission(PERMISSIONS.STAFF_DELETE);
 
   const columns: DataTableColumn<Staff>[] = [
-    {
-      id: 'id',
-      label: 'ID',
-      accessor: (row) => shortId(row.id),
-      minWidth: 80,
-    },
     {
       id: 'name',
       label: 'Name',

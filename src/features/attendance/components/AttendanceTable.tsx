@@ -5,7 +5,7 @@ import AttendanceStatusCell from './AttendanceStatusCell';
 import type { DataTableColumn } from '../../../types/common';
 import type { PaginationMeta } from '../../../types/api';
 import type { Staff } from '../../staff/staffTypes';
-import { formatShiftRange, formatDate, shortId } from '../../../utils/formatters';
+import { formatShiftRange, formatDate } from '../../../utils/formatters';
 
 interface AttendanceTableProps {
   data: Staff[];
@@ -29,12 +29,6 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({
   onRetry,
 }) => {
   const columns: DataTableColumn<Staff>[] = [
-    {
-      id: 'id',
-      label: 'ID',
-      accessor: (row) => shortId(row.id),
-      minWidth: 80,
-    },
     {
       id: 'name',
       label: 'Name',

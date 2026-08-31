@@ -38,7 +38,8 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar }) => {
   const navigate = useNavigate();
   const user = useAppSelector(selectCurrentUser);
   const fullName = useAppSelector(selectUserFullName);
-  const pageTitle = usePageTitleValue();
+  const { title: pageTitle, showBack } = usePageTitleValue();
+  const isBackNav = !!pageTitle && showBack;
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -71,27 +72,22 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar }) => {
       }}
     >
       <Toolbar sx={{ height: HEADER_HEIGHT }}>
-        {pageTitle ? (
-          <>
-            <IconButton
-              edge="start"
-              onClick={() => navigate(-1)}
-              sx={{ mr: 1, color: 'text.primary' }}
-            >
-              <ChevronLeftRoundedIcon />
-            </IconButton>
-            <Typography variant="h6" sx={{ fontWeight: 700, fontSize: '1.1rem' }}>
-              {pageTitle}
-            </Typography>
-          </>
-        ) : (
-          <IconButton
-            edge="start"
-            onClick={onToggleSidebar}
-            sx={{ mr: 2, color: 'text.primary', transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
-          >
-            <MenuRoundedIcon />
-          </IconButton>
+        <IconButton
+          edge="start"
+          onClick={isBackNav ? () => navigate(-1) : onToggleSidebar}
+          sx={{
+            mr: isBackNav ? 1 : 2,
+            color: 'text.primary',
+            transition: 'transform 0.2s',
+            '&:hover': { transform: 'scale(1.1)' },
+          }}
+        >
+          {isBackNav ? <ChevronLeftRoundedIcon /> : <MenuRoundedIcon />}
+        </IconButton>
+        {pageTitle && (
+          <Typography variant="h6" sx={{ fontWeight: 700, fontSize: '1.1rem' }}>
+            {pageTitle}
+          </Typography>
         )}
 
         <Box sx={{ flexGrow: 1 }} />
